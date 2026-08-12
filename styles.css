@@ -204,7 +204,7 @@ section[id] { scroll-margin-top: 84px; }
 }
 
 /* ---- brand + progress ring ---- */
-.brand { display: inline-flex; align-items: center; gap: .7rem; }
+.brand { display: inline-flex; align-items: center; gap: 0; }
 .brand__badge { position: relative; display: block; width: 44px; height: 44px; flex: none; }
 .brand__mark {
   width: 100%; height: 100%;
@@ -229,11 +229,28 @@ section[id] { scroll-margin-top: 84px; }
   transition: stroke-dashoffset .12s linear;
 }
 
+/* Collapses away once the island condenses, so the mark stands alone.
+   The <a> carries an aria-label, so the name is still announced. */
 .brand__name {
   font-family: var(--sans); font-size: .88rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: .12em; color: var(--navy-deep);
   line-height: 1.15; white-space: nowrap;
+  max-width: 16rem; margin-left: .7rem; overflow: hidden;
+  transition: max-width .42s cubic-bezier(.2,.7,.3,1),
+              margin-left .42s cubic-bezier(.2,.7,.3,1),
+              opacity .22s ease, transform .32s ease;
 }
+.nav.is-stuck .brand__name {
+  max-width: 0; margin-left: 0; opacity: 0; transform: translateX(-6px);
+}
+/* Reaching for the mark brings the name back, so it is never a dead end. */
+.nav.is-stuck .brand:hover .brand__name,
+.nav.is-stuck .brand:focus-visible .brand__name {
+  max-width: 16rem; margin-left: .7rem; opacity: 1; transform: none;
+}
+/* The mark takes on a little more presence once it is carrying identity alone. */
+.nav.is-stuck .brand__badge { width: 46px; height: 46px; }
+.brand__badge { transition: width .42s cubic-bezier(.2,.7,.3,1), height .42s cubic-bezier(.2,.7,.3,1); }
 
 /* ---- links with a sliding indicator ---- */
 .nav__menu { display: flex; align-items: center; gap: clamp(.6rem, 1.6vw, 1.2rem); }
