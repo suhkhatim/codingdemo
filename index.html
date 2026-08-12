@@ -91,7 +91,7 @@
     <div class="hero__copy">
       <p class="eyebrow reveal">Baked at home · Small batches · Weekend pickup</p>
       <h1 class="hero__title reveal">
-        The softest bread<br>you'll eat all week.
+        The <span class="mark">softest</span> bread<br>you'll eat all week.
       </h1>
       <p class="hero__lede reveal">
         Hand-pulled Hokkaido milk bread bites, made with the tangzhong method for a
@@ -109,9 +109,10 @@
       </ul>
     </div>
 
-    <div class="hero__art reveal" aria-hidden="true">
+    <div class="hero__art reveal">
+      <p class="sticker">Pickup<strong>Sat 9am</strong></p>
       <!-- Top-down pan of 9 pull-apart bites -->
-      <svg viewBox="0 0 420 420" class="pan" role="img">
+      <svg viewBox="0 0 420 420" class="pan" aria-hidden="true" focusable="false">
         <defs>
           <radialGradient id="biteTop" cx="35%" cy="30%" r="75%">
             <stop offset="0%"  stop-color="#F6D6A4"/>
@@ -312,7 +313,7 @@
 </section>
 
 <!-- ============ HOW IT WORKS ============ -->
-<section class="section" id="how">
+<section class="section section--dark" id="how">
   <div class="wrap">
     <div class="section__head reveal">
       <p class="eyebrow">The process</p>

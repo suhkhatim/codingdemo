@@ -16,7 +16,7 @@
   --sand:        #F6F0E2;   /* large alternating grounds */
   --sand-deep:   #EBE1CB;   /* edges and hovers inside sand */
   --paper-soft:  #FCFAF3;   /* input and choice grounds */
-  --line:        #E4DDCC;
+  --line:        #D9CFB6;
 
   /* accent — the high note. Reads on navy and as a fill; too pale to be
      text on white, which is what --butter-deep is for. */
@@ -26,8 +26,12 @@
 
   /* ink — kept navy-biased so text ties back to the mark */
   --ink:         #16233F;
-  --ink-soft:    #4A5875;
+  --ink-soft:    #3A4761;
   --ink-faint:   #5E6980;   /* 4.8:1 on sand — it carries small labels, so it has to clear AA */
+
+  /* on dark grounds — solid, not white-with-alpha, so contrast is honest */
+  --on-dark:      #FFFFFF;
+  --on-dark-soft: #C4CFE5;
 
   /* semantic */
   --danger:      #B4302A;
@@ -102,6 +106,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 .section { padding-block: var(--section-y); background: var(--paper); }
 .section--tint { background: var(--sand); }
+/* One full-dark band mid-page so the scroll has a real value jump in it
+   rather than only warm-on-warm. */
+.section--dark { background: var(--navy-deep); }
+.section--dark .section__head h2 { color: var(--on-dark); }
+.section--dark .section__lede   { color: var(--on-dark-soft); }
+.section--dark .eyebrow         { color: var(--butter); }
 
 .section__head { max-width: 46ch; margin-bottom: clamp(2.5rem, 5vw, 3.75rem); }
 .section__head h2 { font-size: clamp(2rem, 1.4rem + 2.6vw, 3.1rem); margin-bottom: .7rem; color: var(--navy-deep); }
@@ -120,23 +130,35 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 /* ---------- buttons ---------- */
+/* Buttons sit on a hard offset shadow instead of a soft one, so pressing
+   them actually travels: the face drops onto the shadow and the shadow
+   shrinks by the same amount the face moves. */
 .btn {
-  --btn-bg: transparent; --btn-fg: var(--navy-deep); --btn-bd: transparent;
+  --btn-bg: transparent; --btn-fg: var(--navy-deep); --btn-bd: var(--navy-deep);
+  --btn-lift: 0px;
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
   background: var(--btn-bg); color: var(--btn-fg);
-  border: 1.5px solid var(--btn-bd); border-radius: var(--r-pill);
-  padding: .68rem 1.3rem; font-size: .95rem; font-weight: 600;
+  border: 2px solid var(--btn-bd); border-radius: var(--r-pill);
+  padding: .68rem 1.3rem; font-size: .95rem; font-weight: 700;
+  letter-spacing: .01em;
   cursor: pointer; text-align: center; white-space: nowrap;
-  transition: transform .18s cubic-bezier(.2,.7,.3,1), box-shadow .18s, background .18s, border-color .18s;
+  transform: translateY(calc(var(--btn-lift) * -1));
+  transition: transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s, background .16s, border-color .16s;
 }
-.btn:hover { transform: translateY(-2px); }
-.btn:active { transform: translateY(0); }
-.btn--primary { --btn-bg: var(--navy); --btn-fg: #fff; --btn-bd: var(--navy); box-shadow: var(--shadow-sm); }
-.btn--primary:hover { --btn-bg: var(--navy-deep); --btn-bd: var(--navy-deep); box-shadow: var(--shadow-md); }
-.btn--ghost { --btn-bd: var(--navy); --btn-fg: var(--navy); }
-.btn--ghost:hover { --btn-bg: var(--butter-soft); --btn-bd: var(--butter-deep); }
-.btn--sm { padding: .5rem 1.05rem; font-size: .88rem; }
-.btn--lg { padding: .88rem 1.85rem; font-size: 1rem; }
+
+.btn--primary { --btn-bg: var(--butter); --btn-fg: var(--navy-deep); box-shadow: 0 4px 0 var(--navy-deep); }
+.btn--primary:hover  { --btn-bg: #F7CE63; --btn-lift: 2px; box-shadow: 0 6px 0 var(--navy-deep); }
+.btn--primary:active { --btn-lift: -2px; box-shadow: 0 1px 0 var(--navy-deep); }
+
+.btn--ghost { --btn-bg: transparent; --btn-fg: var(--navy-deep); }
+.btn--ghost:hover  { --btn-bg: var(--navy-deep); --btn-fg: #fff; --btn-lift: 2px; }
+.btn--ghost:active { --btn-lift: -1px; }
+
+.btn--sm { padding: .48rem 1.05rem; font-size: .88rem; }
+.btn--sm.btn--primary { box-shadow: 0 3px 0 var(--navy-deep); }
+.btn--sm.btn--primary:hover  { box-shadow: 0 5px 0 var(--navy-deep); }
+.btn--sm.btn--primary:active { box-shadow: 0 1px 0 var(--navy-deep); }
+.btn--lg { padding: .9rem 1.9rem; font-size: 1.02rem; }
 
 /* ---------- reveal on scroll ---------- */
 .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }
@@ -282,13 +304,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 /* marquee */
-.marquee { border-block: 1px solid var(--line); background: var(--navy); padding-block: .95rem; overflow: hidden; }
+.marquee { background: var(--butter); padding-block: 1rem; overflow: hidden; }
 .marquee__track {
   display: flex; align-items: center; gap: 1.6rem; width: max-content;
   animation: slide 38s linear infinite;
-  font-size: .8rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.82);
+  font-size: .82rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--navy-deep);
 }
-.marquee i { color: var(--butter); font-style: normal; }
+.marquee i { color: var(--navy); font-style: normal; opacity: .5; }
 @keyframes slide { to { transform: translateX(-50%) } }
 
 /* =========================================================
@@ -375,6 +397,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .step h3 { font-size: 1.3rem; margin-bottom: .55rem; color: var(--navy-deep); }
 .step p { color: var(--ink-soft); font-size: .97rem; }
+.section--dark .step h3 { color: var(--on-dark); }
+.section--dark .step p  { color: var(--on-dark-soft); }
 
 /* =========================================================
    ORDER
@@ -524,3 +548,61 @@ select {
 .footer__col a:hover { color: var(--butter); }
 .footer__bottom { border-top: 1px solid rgba(255,255,255,.16); padding-block: 1.4rem 1.8rem; }
 .footer__bottom p { font-size: .84rem; color: rgba(255,255,255,.48); }
+
+
+/* =========================================================
+   PLAYFUL BITS
+   ========================================================= */
+
+/* Marker stroke behind a word in the headline. Painted as the element's own
+   background so it sits behind the glyphs with no stacking games. */
+.mark {
+  background: linear-gradient(var(--butter), var(--butter)) no-repeat;
+  background-size: 100% .34em;
+  background-position: 0 .60em;
+  padding-inline: .05em;
+}
+
+/* Oven sticker slapped on the pan. */
+.hero__art { position: relative; }
+.sticker {
+  position: absolute; top: 7%; left: 4%; z-index: 2;
+  display: grid; place-items: center; gap: .1rem;
+  width: 6.6rem; height: 6.6rem; padding: .5rem;
+  border-radius: 50%; rotate: -12deg;
+  background: var(--butter); color: var(--navy-deep);
+  border: 2.5px solid var(--navy-deep);
+  box-shadow: 0 6px 0 rgba(14,42,99,.22);
+  text-align: center; line-height: 1.15;
+  font-size: .62rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  animation: sticker-bob 4.5s ease-in-out infinite;
+}
+.sticker strong { display: block; font-family: var(--serif); font-size: 1.15rem; letter-spacing: 0; text-transform: none; }
+@keyframes sticker-bob { 0%, 100% { rotate: -12deg } 50% { rotate: -7deg } }
+@media (max-width: 620px) { .sticker { width: 5.2rem; height: 5.2rem; font-size: .54rem; } .sticker strong { font-size: .95rem; } }
+
+/* Cards tilt a touch on hover, like picking one off the counter. */
+/* Alternating tilt direction so a row of them doesn't lean as one block.
+   Both stay in `transform` — mixing in the standalone `rotate` property
+   would compose with this one rather than replace it. */
+.flavor:hover { transform: translateY(-6px) rotate(-1.2deg); }
+.flavor:nth-child(even):hover { transform: translateY(-6px) rotate(1.2deg); }
+.card:hover   { transform: translateY(-6px) rotate(.7deg); }
+.card:hover .card__icon { background: var(--butter); rotate: -6deg; }
+.card__icon { transition: background .25s, rotate .25s cubic-bezier(.34,1.56,.64,1); }
+
+/* The featured box wears its badge like a sticker rather than a tab. */
+.box-card__badge { rotate: -3.5deg; box-shadow: 0 3px 0 rgba(14,42,99,.25); border: 2px solid var(--navy-deep); }
+.box-card--featured { rotate: -.8deg; }
+.box-card--featured:hover { rotate: 0deg; }
+.box-card { transition: rotate .3s cubic-bezier(.34,1.56,.64,1), transform .3s, box-shadow .3s; }
+
+/* Step numbers pop when the row is hovered. */
+.step:hover .step__num { rotate: -10deg; scale: 1.08; }
+.step__num { transition: rotate .3s cubic-bezier(.34,1.56,.64,1), scale .3s cubic-bezier(.34,1.56,.64,1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sticker { animation: none; }
+  .flavor:hover, .card:hover, .box-card--featured, .box-card--featured:hover { transform: none; rotate: 0deg; }
+  .card:hover .card__icon, .step:hover .step__num { rotate: 0deg; scale: 1; }
+}
