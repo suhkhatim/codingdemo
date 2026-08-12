@@ -1,5 +1,5 @@
 /* =========================================================
-   Hokkaido Bread Bites — front-end behavior
+   The Yeast Coast — front-end behavior
    No dependencies, no build step.
    ========================================================= */
 
@@ -7,9 +7,9 @@
    CONFIG — edit this block and nothing else to rebrand.
    --------------------------------------------------------- */
 const CONFIG = {
-  businessName: 'Hokkaido Bread Bites',
+  businessName: 'The Yeast Coast',
   orderEmail:   'hello@example.com',   // where order emails are sent
-  instagram:    'hokkaidobreadbites',  // handle, no @
+  instagram:    'theyeastcoast',       // handle, no @
   pickupWeekday: 6,                    // 0=Sun … 6=Sat
   leadTimeDays:  3,                    // earliest pickup, in days from today
   pickupSlots:   6                     // how many upcoming dates to offer

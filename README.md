@@ -1,4 +1,4 @@
-# Hokkaido Bread Bites — website
+# The Yeast Coast — website
 
 A single-page site for an at-home Hokkaido milk bread business. Plain HTML, CSS,
 and JavaScript — no build step, no dependencies, no server. Open `index.html` in
@@ -26,9 +26,9 @@ Everything identifying lives in one block at the top of `script.js`:
 
 ```js
 const CONFIG = {
-  businessName: 'Hokkaido Bread Bites',
+  businessName: 'The Yeast Coast',
   orderEmail:   'hello@example.com',   // where order emails land
-  instagram:    'hokkaidobreadbites',  // handle, no @
+  instagram:    'theyeastcoast',       // handle, no @
   pickupWeekday: 6,                    // 0=Sun … 6=Sat
   leadTimeDays:  3,                    // earliest pickup, days from today
   pickupSlots:   6                     // how many upcoming dates to offer
