@@ -594,7 +594,63 @@ select {
   font-family: var(--display); font-size: 1.9rem; letter-spacing: -.01em;
   color: var(--navy-deep); font-variant-numeric: tabular-nums;
 }
-.ticket__fine { margin-top: 1rem; font-size: .7rem; color: var(--ink-faint); line-height: 1.55; }
+.ticket__fine { margin-top: .8rem; font-size: .7rem; color: var(--ink-faint); line-height: 1.55; }
+
+/* Payment sits on the ticket because that is where the amount already is. */
+.ticket__pay { margin-top: 1.2rem; padding-top: 1rem; border-top: 2px dashed var(--line); }
+.ticket__payhead {
+  font-family: var(--sans); font-size: .72rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--navy-deep);
+}
+.ticket__payhead span { color: var(--butter-deep); }
+.ticket__methods { margin-top: .7rem; display: grid; gap: .45rem; }
+.ticket__methods li { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
+.ticket__methods span { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); }
+.ticket__methods strong { font-size: .82rem; color: var(--navy-deep); word-break: break-all; text-align: right; }
+
+/* =========================================================
+   DOCUMENT PAGES (privacy)
+   ========================================================= */
+.doc { padding-block: clamp(3rem, 7vw, 5.5rem) var(--section-y); }
+.doc__head { max-width: 60ch; margin-bottom: clamp(2rem, 4vw, 3rem); }
+.doc__head h1 { font-size: clamp(2.3rem, 1.5rem + 3vw, 3.6rem); color: var(--navy-deep); margin-bottom: .8rem; font-variation-settings: 'opsz' 144; }
+.doc__meta { font-size: .86rem; color: var(--ink-faint); }
+.doc__toc {
+  background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--butter);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 1.2rem 1.4rem; margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.doc__toc h2 { font-family: var(--sans); font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: .7rem; }
+.doc__toc ol { display: grid; gap: .35rem; counter-reset: toc; }
+.doc__toc li { counter-increment: toc; font-size: .93rem; }
+.doc__toc li::before { content: counter(toc) ". "; color: var(--butter-deep); font-weight: 700; }
+.doc__toc a { color: var(--navy-deep); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.doc__toc a:hover { text-decoration-color: var(--butter-deep); }
+
+.prose { max-width: 68ch; }
+.prose h2 {
+  font-size: clamp(1.4rem, 1.15rem + .8vw, 1.8rem); color: var(--navy-deep);
+  margin: clamp(2.2rem, 4vw, 3rem) 0 .8rem; scroll-margin-top: 100px;
+}
+.prose h2:first-child { margin-top: 0; }
+.prose h3 { font-size: 1.12rem; color: var(--navy-deep); margin: 1.6rem 0 .5rem; }
+.prose p, .prose li { color: var(--ink-soft); }
+.prose p + p { margin-top: .9rem; }
+.prose ul { margin: .9rem 0; display: grid; gap: .5rem; }
+.prose ul li { padding-left: 1.4rem; position: relative; }
+.prose ul li::before {
+  content: ""; position: absolute; left: 0; top: .62em;
+  width: .45rem; height: .45rem; border-radius: 50%; background: var(--butter);
+}
+.prose strong { color: var(--navy-deep); font-weight: 700; }
+.prose a { color: var(--navy); text-decoration: underline; text-underline-offset: 3px; }
+.prose .callout {
+  margin: 1.4rem 0; padding: 1.1rem 1.3rem;
+  background: var(--butter-soft); border-radius: var(--r-md);
+  border-left: 3px solid var(--butter); font-size: .95rem;
+}
+.prose .callout strong { display: block; margin-bottom: .3rem; }
+.doc__back { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
 
 /* =========================================================
    Q&A — a plain list beats an accordion at six questions

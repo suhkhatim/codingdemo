@@ -88,8 +88,8 @@
       </h1>
       <p class="hero__lede reveal">
         Hokkaido milk bread bites, made by hand in a home kitchen with a cooked-flour
-        starter. One bake, every Saturday morning — and whatever isn't spoken for
-        by Wednesday doesn't get made.
+        starter. One bake, every Saturday morning — paid for in advance, and
+        whatever isn't spoken for by Wednesday doesn't get made.
       </p>
       <div class="hero__cta reveal">
         <a class="btn btn--primary btn--lg" href="#order">Pre-order a box</a>
@@ -337,8 +337,8 @@
       <li class="week__day is-mark">
         <span class="week__name">Wed</span>
         <div class="week__event">
-          <h3>Orders close</h3>
-          <p>Send the form by the end of Wednesday. After that the shopping is done and the list is set.</p>
+          <h3>Order &amp; pay</h3>
+          <p>Send the form by the end of Wednesday and pay to lock it in. A box isn't held until payment lands — that's what lets the shopping list be exact.</p>
         </div>
       </li>
       <li class="week__day"><span class="week__name">Thu</span></li>
@@ -353,7 +353,7 @@
         <span class="week__name">Sat</span>
         <div class="week__event">
           <h3>Bake &amp; pickup, 9am</h3>
-          <p>Shaped at six, baked at eight, in your hands by nine. Pay on collection — cash or transfer.</p>
+          <p>Shaped at six, baked at eight, in your hands by nine. Already paid for, so collection is just a hello and a box.</p>
         </div>
       </li>
     </ol>
@@ -367,8 +367,9 @@
       <p class="eyebrow">Pre-order</p>
       <h2>Build your box</h2>
       <p class="section__lede">
-        Nothing is charged here. This writes up a ticket and sends it over — you'll
-        get a reply confirming it before anything gets mixed.
+        Nothing is charged on this page. It writes up a ticket to send over, then
+        you pay by Cash App or Zelle to hold the box — boxes are made to the paid
+        list, so payment is what reserves it.
       </p>
     </div>
 
@@ -477,7 +478,14 @@
             <span>Total</span>
             <strong id="summaryTotal">$12</strong>
           </div>
-          <p class="ticket__fine">Paid on pickup — cash or transfer. Confirmed by reply before anything is mixed.</p>
+          <div class="ticket__pay">
+            <p class="ticket__payhead">Send <span id="payAmount">$12</span> to confirm</p>
+            <ul class="ticket__methods">
+              <li><span>Cash App</span><strong data-pay="cashapp">—</strong></li>
+              <li><span>Zelle</span><strong data-pay="zelle">—</strong></li>
+            </ul>
+            <p class="ticket__fine">Put your name and pickup date in the payment note. Boxes are held once payment lands, not before — the ticket is confirmed by reply.</p>
+          </div>
         </div>
       </aside>
     </div>
@@ -495,7 +503,19 @@
     <dl class="qa-list reveal">
       <div class="qa-item">
         <dt>How far ahead do I order?</dt>
-        <dd>Wednesday night for that Saturday. Later than that, send it anyway — sometimes there's room, and you'll get an honest answer if there isn't.</dd>
+        <dd>Wednesday night for that Saturday, and payment has to be in by then too. Later than that, send it anyway — sometimes there's room, and you'll get an honest answer if there isn't.</dd>
+      </div>
+      <div class="qa-item">
+        <dt>How do I pay?</dt>
+        <dd>Cash App or Zelle, up front. The handles are on your ticket once you've built a box. Put your name and pickup date in the payment note so it can be matched to your order. Nothing is charged on this website and no card details are ever collected.</dd>
+      </div>
+      <div class="qa-item">
+        <dt>Why pay in advance?</dt>
+        <dd>Because everything is made to order in one bake. The shopping and the mixing happen against the paid list, so an unpaid box is one that doesn't get made — and paying is what stops someone else taking the slot.</dd>
+      </div>
+      <div class="qa-item">
+        <dt>What if I need to cancel?</dt>
+        <dd>Tell me before Wednesday's cutoff and you get a full refund, same way you paid. After the cutoff the ingredients are bought and the dough is planned, so it can't be refunded — but the box is yours, and it can usually be held for a later Saturday or passed to someone else if you'd rather.</dd>
       </div>
       <div class="qa-item">
         <dt>How do I keep them?</dt>
@@ -541,6 +561,7 @@
         <li><a href="#menu">Flavors</a></li>
         <li><a href="#craft">The method</a></li>
         <li><a href="#faq">FAQ</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
       </ul>
     </div>
     <div class="footer__col">

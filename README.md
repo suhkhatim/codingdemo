@@ -4,8 +4,9 @@ A single-page site for an at-home Hokkaido milk bread business. Plain HTML, CSS
 and JavaScript — no build step, no dependencies, no server.
 
 ```
-index.html    markup and copy
-styles.css    all styling
+index.html    the main page
+privacy.html  privacy policy
+styles.css    all styling, both pages
 fonts.css     two self-hosted webfaces, inlined as data URIs
 script.js     config, weekly stock, photo slots, order form
 photos/       your photos — see photos/README.md
@@ -19,11 +20,21 @@ npx http-server -p 8080     # or: python3 -m http.server 8080
 
 ## The three things to do before this goes live
 
-### 1. Set your email
+### 1. Set your email and payment handles
 
-`CONFIG.orderEmail` at the top of `script.js` is `hello@example.com`. Every
-order button routes there, so nothing reaches you until you change it. Check
-`instagram` on the line below it too.
+At the top of `script.js`:
+
+```js
+orderEmail: 'hello@example.com',      // where order emails land
+instagram:  'theyeastcoast',
+payment: {
+  cashApp: '$TheYeastCoast',          // your $cashtag
+  zelle:   'hello@example.com'        // the phone or email your Zelle uses
+},
+```
+
+All four are placeholders. The Cash App and Zelle handles print on the ticket
+and in the emailed order, so customers cannot pay until they are real.
 
 ### 2. Add photos
 
@@ -75,15 +86,33 @@ a price is a one-attribute edit.
 Flavors likewise live in the menu cards, the order-form checkboxes, and the
 `FLAVORS` array in `script.js` (used only to sanity-check `soldOut`).
 
-## How ordering works
+## How ordering and payment work
 
-No backend, nothing charged. The form validates in the browser, then either
-opens the customer's mail app with a formatted ticket addressed to
-`orderEmail`, or copies the same ticket for pasting into an Instagram DM.
+Boxes are **paid up front**. Nothing is charged on the website and no card
+details are collected anywhere in the flow.
 
-The trade-off: an order only reaches you if the customer completes the send, so
-confirm each one by reply. If you outgrow that, point the `submit` handler at a
-hosted form service (Formspree, Netlify Forms) and keep everything else.
+1. The customer builds a box. The form validates in the browser.
+2. Sending opens their own mail app with the ticket pre-filled, or copies it for
+   an Instagram DM. The ticket includes the total and both payment handles.
+3. They send the money by Cash App or Zelle with their name and pickup date in
+   the payment note.
+4. You match the payment to the ticket and reply to confirm.
+
+The box isn't held until payment lands — that's stated on the ticket, in the
+FAQ, and in the week timeline, so it should not surprise anyone.
+
+Two consequences worth being ready for. An order only reaches you if the
+customer completes the send, so a ticket with no payment against it is a normal
+occurrence, not a lost order. And because you are matching payments by hand,
+the note field is doing real work — chase it if someone leaves it blank.
+
+The cancellation terms in the FAQ (full refund before the Wednesday cutoff, none
+after, box transferable) are a starting point. Change them to whatever you're
+actually willing to honor, since customers will hold you to what's written.
+
+If you outgrow this, point the `submit` handler at a hosted form service
+(Formspree, Netlify Forms), or move to a real checkout (Stripe, Square) if you
+want payment and order capture in one step.
 
 ## Publishing
 
@@ -92,14 +121,35 @@ Settings → Pages → deploy from the branch root.
 
 ## Before you take real orders
 
-Two bits of the FAQ carry legal weight and are written as placeholders:
+Three things carry legal weight and are written as placeholders:
 
-- the allergen line under **What's in them?**
+- the allergen line under **What's in them?** in the FAQ
 - the cottage-food notice at the foot of the FAQ
+- `privacy.html`
 
-Most US states require wording close to that second line for home-baked goods
-sold to the public, sometimes on the packaging too, and the exact sentence
+Most US states require wording close to the cottage-food line for home-baked
+goods sold to the public, sometimes on the packaging too, and the exact sentence
 varies. Confirm what yours asks for.
+
+### The privacy policy
+
+`privacy.html` describes what this site genuinely does — no cookies, no
+analytics, no third-party embeds, self-hosted fonts, and an order form that
+hands off to your own email client rather than posting anywhere. Those claims
+are accurate as written, and they stay accurate only while the site works this
+way. **If you ever add analytics, a hosted form backend, a chat widget, an
+embedded map, or a real checkout, this page becomes wrong and has to be
+updated.**
+
+Three placeholders need filling — search the file for square brackets:
+
+- `[your city, state]` — where you bake
+- `[your state]` — for the record-keeping sentence
+- `[your host]` — whoever serves the pages, e.g. GitHub Pages or Netlify
+
+It is written in plain language rather than legalese, and it is not legal
+advice. If you have any doubt about your state's requirements, or you start
+shipping outside it, have someone local read it over.
 
 ## Notes
 

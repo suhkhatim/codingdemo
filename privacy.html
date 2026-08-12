@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy · The Yeast Coast</title>
+<meta name="description" content="What The Yeast Coast collects when you order, where it goes, and how long it is kept.">
+<meta name="theme-color" content="#F6F0E2">
+<meta name="robots" content="index, follow">
+
+<!-- PLACEHOLDERS TO FILL BEFORE THIS GOES LIVE — search for square brackets:
+     [your city, state], [your state], [your host]. Everything else describes
+     what the site actually does and should stay accurate as long as the
+     ordering flow is unchanged. Have someone local confirm the wording meets
+     your state's requirements. -->
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231A3F92'/><circle cx='50' cy='50' r='43' fill='none' stroke='%23fff' stroke-width='2.5'/><g transform='rotate(-24 50 50)'><rect x='21' y='34' width='58' height='14' rx='7' fill='%23fff'/><rect x='21' y='52' width='58' height='14' rx='7' fill='%23fff'/></g></svg>">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="logo-mark" viewBox="0 0 200 200">
+    <circle class="logo__ground" cx="100" cy="100" r="99"/>
+    <circle class="logo__keyline" cx="100" cy="100" r="89" stroke-width="2.5"/>
+    <path id="logo-arc-top" d="M 34,100 A 66,66 0 0 1 166,100" fill="none"/>
+    <path id="logo-arc-bot" d="M 16,100 A 84,84 0 0 0 184,100" fill="none"/>
+    <text class="logo__type" font-size="24" letter-spacing="3.4">
+      <textPath href="#logo-arc-top" startOffset="50%" text-anchor="middle">THE YEAST</textPath>
+    </text>
+    <text class="logo__type" font-size="27" letter-spacing="6">
+      <textPath href="#logo-arc-bot" startOffset="50%" text-anchor="middle">COAST</textPath>
+    </text>
+    <circle class="logo__dot" cx="25" cy="100" r="3.4"/>
+    <circle class="logo__dot" cx="175" cy="100" r="3.4"/>
+    <g transform="rotate(-24 100 100)">
+      <g transform="translate(-3,-14)">
+        <rect class="logo__loaf" x="52" y="89" width="96" height="22" rx="11"/>
+        <path class="logo__score" d="M68 96l9 8M86 95l9 8M104 95l9 8M122 96l9 8"/>
+      </g>
+      <g transform="translate(3,14)">
+        <rect class="logo__loaf" x="52" y="89" width="96" height="22" rx="11"/>
+        <path class="logo__score" d="M68 96l9 8M86 95l9 8M104 95l9 8M122 96l9 8"/>
+      </g>
+    </g>
+  </symbol>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href="index.html" aria-label="The Yeast Coast, home">
+      <svg class="brand__mark logo" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#logo-mark"/></svg>
+      <span class="brand__name" data-business-name>The Yeast Coast</span>
+    </a>
+
+    <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+      <span class="nav__bars" aria-hidden="true"></span>
+      <span class="sr-only">Menu</span>
+    </button>
+
+    <nav class="nav__menu" id="navMenu" aria-label="Main">
+      <a href="index.html#note">The baker</a>
+      <a href="index.html#menu">Flavors</a>
+      <a href="index.html#faq">FAQ</a>
+      <a class="btn btn--sm btn--primary" href="index.html#order">Pre-order</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="doc">
+  <div class="wrap wrap--narrow">
+
+    <div class="doc__head">
+      <p class="eyebrow">Privacy</p>
+      <h1>What we collect, and what we don't</h1>
+      <p class="doc__meta">Last updated 12 August 2026 · Applies to this website and to orders placed through it</p>
+    </div>
+
+    <nav class="doc__toc" aria-label="On this page">
+      <h2>On this page</h2>
+      <ol>
+        <li><a href="#short">The short version</a></li>
+        <li><a href="#site">What the website itself does</a></li>
+        <li><a href="#order">What you send when you order</a></li>
+        <li><a href="#route">How your order actually reaches us</a></li>
+        <li><a href="#payments">Payments</a></li>
+        <li><a href="#use">What we do with it</a></li>
+        <li><a href="#keep">How long we keep it</a></li>
+        <li><a href="#others">Who else is involved</a></li>
+        <li><a href="#allergy">Allergy and dietary notes</a></li>
+        <li><a href="#choices">Your choices</a></li>
+        <li><a href="#children">Children</a></li>
+        <li><a href="#changes">Changes to this policy</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+    </nav>
+
+    <article class="prose">
+
+      <h2 id="short">The short version</h2>
+      <p>
+        This is a one-person home bakery, not a company with a marketing department.
+        The website sets no cookies, runs no analytics, and has no account system.
+        We ask for a name, an email address and your order — enough to bake the right
+        thing and tell you when it's ready — and we don't sell, rent or share any of
+        it with anyone.
+      </p>
+
+      <h2 id="site">What the website itself does</h2>
+      <p>
+        This site is a set of static files. There is no database behind it and no
+        server that belongs to us. Specifically:
+      </p>
+      <ul>
+        <li><strong>No cookies.</strong> Nothing is stored on your device by this site.</li>
+        <li><strong>No analytics or tracking.</strong> There is no Google Analytics, no Meta pixel, no session recording, no advertising tag.</li>
+        <li><strong>No third-party embeds.</strong> The fonts are hosted on this site rather than loaded from a font network, so your visit isn't reported to a font provider. There are no embedded maps, videos or social widgets.</li>
+        <li><strong>No account.</strong> There is nothing to sign up for and no password to store.</li>
+      </ul>
+      <p>
+        The only things that leave your browser are the page files themselves, and
+        anything you deliberately choose to send using the buttons on the order form.
+      </p>
+
+      <h2 id="order">What you send when you order</h2>
+      <p>The order form builds a ticket containing:</p>
+      <ul>
+        <li>Your name</li>
+        <li>Your email address</li>
+        <li>Your phone number, if you choose to give one — it's optional</li>
+        <li>Your order: box size, quantity, flavors, and the pickup date</li>
+        <li>Anything you type into the notes field, which may include allergy or dietary information</li>
+      </ul>
+      <p>
+        That's the whole list. We never ask for a home address, a date of birth, or
+        any payment card or bank details.
+      </p>
+
+      <h2 id="route">How your order actually reaches us</h2>
+      <p>
+        This part is unusual enough to be worth spelling out, because it means the
+        website never holds your details even for a moment.
+      </p>
+      <p>
+        Filling in the form changes nothing outside your own browser. When you press
+        <strong>Send order by email</strong>, your device opens your own email app
+        with the ticket already written out, addressed to us. You are the one who
+        sends it, from your own account, and you can edit or abandon it first. When
+        you press <strong>Copy for Instagram DM</strong>, the ticket is copied to your
+        clipboard so you can paste it into a message.
+      </p>
+      <p>
+        Either way, your order reaches us as an ordinary email or direct message. It
+        is never posted to a server of ours, because there isn't one.
+      </p>
+
+      <h2 id="payments">Payments</h2>
+      <p>
+        Boxes are paid for in advance by <strong>Cash App</strong> or
+        <strong>Zelle</strong>. No payment is taken on this website, and no card or
+        bank details are ever entered here or seen by us.
+      </p>
+      <p>
+        When you pay, that transaction happens inside Cash App or Zelle, under their
+        own terms and privacy policies. What reaches us is what those apps show the
+        recipient of a payment: typically the display name or handle on your account,
+        the amount, the date, and whatever you write in the payment note. We use that
+        only to match the payment to your order, which is why we ask you to put your
+        name and pickup date in the note.
+      </p>
+      <p>
+        If you cancel before the Wednesday cutoff, the refund is sent back through the
+        same app you paid with.
+      </p>
+
+      <h2 id="use">What we do with it</h2>
+      <p>We use your details to:</p>
+      <ul>
+        <li>Bake the right order and match your payment to it</li>
+        <li>Reply to confirm the order, and tell you if something has changed</li>
+        <li>Answer a question about an allergy or a special request</li>
+        <li>Keep a basic record of what was sold, for our own accounts and tax</li>
+      </ul>
+      <p>
+        We don't use it for anything else. There is no mailing list unless you ask to
+        be told when a new flavor appears, and if you do ask, you can be taken off it
+        by replying to any message. Nothing is sold, rented or handed to advertisers,
+        data brokers or anyone else, and we don't build a profile of you.
+      </p>
+
+      <h2 id="keep">How long we keep it</h2>
+      <p>
+        Order messages sit in the email inbox or the Instagram message thread they
+        arrived in. Once an order has been collected and paid for, we keep the message
+        for as long as it is useful to remember a repeat customer's usual order and
+        allergies — and no longer than needed for tax records, which in
+        <strong>[your state]</strong> generally means a few years for anything that
+        counts as a sales record.
+      </p>
+      <p>
+        Ask us to delete your details and we will delete the messages and any note we
+        have of you, keeping only what a tax authority requires us to keep.
+      </p>
+
+      <h2 id="others">Who else is involved</h2>
+      <p>
+        We use ordinary services to run a small business, and your information passes
+        through some of them. Each has its own privacy policy:
+      </p>
+      <ul>
+        <li><strong>Our email provider</strong>, which stores the message you send</li>
+        <li><strong>Instagram (Meta)</strong>, if you order or ask questions by direct message</li>
+        <li><strong>Cash App (Block) or Zelle (Early Warning Services)</strong>, for payment</li>
+        <li><strong>[your host]</strong>, the service hosting these web pages, which keeps standard server logs — typically IP address, browser type and the time of the request — for security and reliability. We don't use those logs and don't combine them with anything else.</li>
+      </ul>
+      <p>
+        We don't hand your details to anyone beyond that, except where the law requires
+        it — for example a lawful request from a public authority.
+      </p>
+
+      <h2 id="allergy">Allergy and dietary notes</h2>
+      <div class="callout">
+        <strong>Health information gets extra care.</strong>
+        Anything you tell us about allergies or dietary needs is used only to answer
+        your question honestly and to bake safely. It isn't shared with anyone, and if
+        you'd rather it wasn't kept after your order, say so and it will be deleted
+        while the rest of the order record stays.
+      </div>
+      <p>
+        Please do also read the allergen note in the
+        <a href="index.html#faq">FAQ</a>: everything is made in a home kitchen that
+        handles wheat, dairy, eggs, soy, sesame and tree nuts, so no batch can be
+        promised free of them.
+      </p>
+
+      <h2 id="choices">Your choices</h2>
+      <p>You can ask us at any time to:</p>
+      <ul>
+        <li>Tell you what we hold about you</li>
+        <li>Correct anything that's wrong</li>
+        <li>Delete your details, beyond what tax records require</li>
+        <li>Stop contacting you altogether</li>
+      </ul>
+      <p>
+        Email the address at the bottom of this page and you'll get a reply. Depending
+        on where you live, laws such as the California Consumer Privacy Act or the
+        GDPR may give you these rights formally; we'll honor the request either way
+        and we won't treat you differently for asking. We have never sold personal
+        information and have no plans to.
+      </p>
+
+      <h2 id="children">Children</h2>
+      <p>
+        This is a bakery, and children are very welcome to eat the bread. But the site
+        isn't aimed at children and we don't knowingly collect details from anyone
+        under 13. If a child has sent us their information, tell us and it will be
+        deleted.
+      </p>
+
+      <h2 id="changes">Changes to this policy</h2>
+      <p>
+        If how we handle orders changes — a real checkout, a mailing list, a delivery
+        service — this page gets updated and the date at the top changes with it. There
+        is no archive of old versions; a small bakery's policy shouldn't need one.
+      </p>
+
+      <h2 id="contact">Contact</h2>
+      <p>
+        Questions about any of this, or a request about your own details, go to
+        <a data-contact="email" href="#">our email address</a>. We're a home kitchen
+        in <strong>[your city, state]</strong>, and a real person reads it.
+      </p>
+
+      <p class="doc__back">
+        <a class="btn btn--ghost" href="index.html">← Back to the bread</a>
+      </p>
+
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <div class="footer__brand">
+      <svg class="footer__mark logo logo--reversed" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#logo-mark"/></svg>
+      <p>Hokkaido milk bread bites, baked at home one morning a week and collected warm.</p>
+    </div>
+    <div class="footer__col">
+      <h4>Find us</h4>
+      <ul>
+        <li><a href="index.html#order">Pre-order a box</a></li>
+        <li><a href="index.html#menu">Flavors</a></li>
+        <li><a href="index.html#craft">The method</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+      </ul>
+    </div>
+    <div class="footer__col">
+      <h4>Say hello</h4>
+      <ul>
+        <li><a data-contact="email" href="#">Email</a></li>
+        <li><a data-contact="instagram" href="#" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer__bottom">
+    <p>© <span id="year"></span> <span data-business-name>The Yeast Coast</span>. Pickup only.</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

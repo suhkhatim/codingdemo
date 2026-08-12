@@ -17,6 +17,12 @@ const CONFIG = {
   pickupSlots:   6,                    // how many upcoming dates to offer
   cutoffDay:     'Wednesday',
 
+  // Boxes are paid up front — nothing is held until payment lands.
+  payment: {
+    cashApp: '$TheYeastCoast',         // your $cashtag
+    zelle:   'hello@example.com'       // the phone or email your Zelle is registered to
+  },
+
   // ---- update these every week ----
   thisWeek: {
     boxesTotal: 20,
@@ -40,17 +46,22 @@ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     el.textContent = CONFIG.businessName;
   });
 
-  const emailLink = document.querySelector('[data-contact="email"]');
-  if (emailLink) {
-    emailLink.href = 'mailto:' + CONFIG.orderEmail;
-    emailLink.textContent = CONFIG.orderEmail;
-  }
+  // querySelectorAll, not querySelector — the privacy page carries a contact
+  // link in the prose as well as the one in the footer.
+  document.querySelectorAll('[data-contact="email"]').forEach(function (el) {
+    el.href = 'mailto:' + CONFIG.orderEmail;
+    el.textContent = CONFIG.orderEmail;
+  });
 
-  const igLink = document.querySelector('[data-contact="instagram"]');
-  if (igLink) {
-    igLink.href = 'https://instagram.com/' + CONFIG.instagram;
-    igLink.textContent = '@' + CONFIG.instagram;
-  }
+  document.querySelectorAll('[data-contact="instagram"]').forEach(function (el) {
+    el.href = 'https://instagram.com/' + CONFIG.instagram;
+    el.textContent = '@' + CONFIG.instagram;
+  });
+
+  const cash = document.querySelector('[data-pay="cashapp"]');
+  if (cash) cash.textContent = CONFIG.payment.cashApp;
+  const zelle = document.querySelector('[data-pay="zelle"]');
+  if (zelle) zelle.textContent = CONFIG.payment.zelle;
 
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
@@ -165,6 +176,7 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
   const toggle = document.getElementById('navToggle');
   const menu   = document.getElementById('navMenu');
   const bar    = document.getElementById('nav');
+  if (!toggle || !menu || !bar) return;
 
   toggle.addEventListener('click', function () {
     const open = menu.classList.toggle('is-open');
@@ -246,6 +258,7 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
   const statusEl    = document.getElementById('orderStatus');
   const summaryList = document.getElementById('summaryList');
   const summaryTot  = document.getElementById('summaryTotal');
+  const payAmount   = document.getElementById('payAmount');
   const dmBtn       = document.getElementById('dmBtn');
 
   // Looked up by id, not form.<name> — HTMLFormElement.name is the form's own
@@ -328,7 +341,9 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
       row('Flavors', d.flavors.length ? d.flavors.join(', ') : '—'),
       row('Pickup', d.pickup || '—')
     );
-    summaryTot.textContent = '$' + (d.price * d.qty);
+    const total = '$' + (d.price * d.qty);
+    summaryTot.textContent = total;
+    if (payAmount) payAmount.textContent = total;
   }
 
   function setFieldError(input, show) {
@@ -371,6 +386,13 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
     ];
     if (d.phone) lines.push('Phone: ' + d.phone);
     if (d.notes) lines.push('', 'Notes: ' + d.notes);
+    lines.push(
+      '',
+      '--- To confirm this box, send $' + (d.price * d.qty) + ' ---',
+      'Cash App: ' + CONFIG.payment.cashApp,
+      'Zelle:    ' + CONFIG.payment.zelle,
+      'Put your name and pickup date in the payment note.'
+    );
     return lines.join('\n');
   }
 
@@ -413,7 +435,7 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
       '?subject=' + encodeURIComponent('Box order — ' + d.name + ' — ' + d.pickup) +
       '&body='    + encodeURIComponent(orderText());
     window.location.href = href;
-    say('Opening your email app — hit send and you’ll get a reply within a day.');
+    say('Opening your email app — send it, then pay the total to hold the box.');
   });
 
   dmBtn.addEventListener('click', async function () {
@@ -439,7 +461,7 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
       document.body.removeChild(scratch);
     }
     if (copied) {
-      say('Ticket copied. Opening Instagram — paste it into a DM.');
+      say('Ticket copied. Paste it into a DM, then pay the total to hold the box.');
       window.open('https://instagram.com/' + CONFIG.instagram, '_blank', 'noopener');
     } else {
       say('Couldn’t copy automatically — email works, or screenshot the ticket.', true);
