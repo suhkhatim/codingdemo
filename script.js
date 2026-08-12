@@ -36,6 +36,19 @@ const FLAVORS = [
   'Matcha White Chocolate', 'Black Sesame', 'Ube', 'Chocolate Hazelnut'
 ];
 
+/* Roughly what each one looks like baked — the tray is meant to read as
+   the actual box, so these are food colours, not brand colours. */
+const FLAVOR_COLOR = {
+  'Classic Milk':           '#F2DFC0',
+  'Honey Butter':           '#E8B863',
+  'Hokkaido Custard':       '#F5D97E',
+  'Cinnamon Sugar':         '#C08A56',
+  'Matcha White Chocolate': '#A8BE84',
+  'Black Sesame':           '#6E6A6B',
+  'Ube':                    '#8E7BB5',
+  'Chocolate Hazelnut':     '#7A5138'
+};
+
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* =========================================================
@@ -140,6 +153,34 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
 })();
 
 /* =========================================================
+   The week — mark today, and say plainly whether ordering is open
+   ========================================================= */
+(function weekStatus() {
+  const days = document.querySelectorAll('.week__day');
+  const statusEl = document.getElementById('weekStatus');
+  if (!days.length) return;
+
+  const today = new Date().getDay();          // 0=Sun … 6=Sat
+  const CUTOFF = 3;                           // Wednesday
+  if (days[today]) days[today].classList.add('is-today');
+
+  if (!statusEl) return;
+  const name = new Intl.DateTimeFormat(undefined, { weekday: 'long' }).format(new Date());
+  const nextBake = PICKUP_FMT.format(upcomingPickups()[0]);
+
+  if (today <= CUTOFF) {
+    const daysLeft = CUTOFF - today;
+    statusEl.innerHTML = daysLeft === 0
+      ? 'It\'s <strong>' + name + '</strong> — today is the cutoff. Orders for ' + nextBake + ' close tonight.'
+      : 'It\'s <strong>' + name + '</strong>. You have ' + daysLeft + ' day' + (daysLeft === 1 ? '' : 's')
+        + ' left to order for <strong>' + nextBake + '</strong>.';
+  } else {
+    statusEl.innerHTML = 'It\'s <strong>' + name + '</strong>, so this week\'s list has closed and the dough is planned. '
+      + 'Orders sent now go on the list for <strong>' + nextBake + '</strong>.';
+  }
+})();
+
+/* =========================================================
    Sold-out flavors — marked on the menu and locked in the form
    ========================================================= */
 (function soldOut() {
@@ -167,6 +208,52 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
       input.closest('.choice').classList.add('is-out');
     }
   });
+})();
+
+/* =========================================================
+   Copy to clipboard — used by the payment handles
+   ========================================================= */
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (err) {
+    // Clipboard API needs a secure context; fall back to a hidden textarea.
+    const scratch = document.createElement('textarea');
+    scratch.value = text;
+    scratch.setAttribute('readonly', '');
+    scratch.style.position = 'fixed';
+    scratch.style.opacity = '0';
+    document.body.appendChild(scratch);
+    scratch.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(scratch);
+    return ok;
+  }
+}
+
+(function copyables() {
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', async function () {
+      if (!(await copyText(btn.textContent.replace(/\s*copied$/, '').trim()))) return;
+      btn.classList.add('is-copied');
+      setTimeout(function () { btn.classList.remove('is-copied'); }, 1600);
+    });
+  });
+})();
+
+/* =========================================================
+   Crumb wipe — a real range input stretched over the stage, so pointer
+   drag, arrow keys and screen readers all work without a drag handler.
+   ========================================================= */
+(function crumbWipe() {
+  const range = document.getElementById('wipeRange');
+  const stage = document.getElementById('wipeStage');
+  if (!range || !stage) return;
+  const sync = function () { stage.style.setProperty('--wipe', range.value + '%'); };
+  range.addEventListener('input', sync);
+  sync();
 })();
 
 /* =========================================================
@@ -259,6 +346,9 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
   const summaryList = document.getElementById('summaryList');
   const summaryTot  = document.getElementById('summaryTotal');
   const payAmount   = document.getElementById('payAmount');
+  const tray        = document.getElementById('tray');
+  const trayLegend  = document.getElementById('trayLegend');
+  const trayStatus  = document.getElementById('trayStatus');
   const dmBtn       = document.getElementById('dmBtn');
 
   // Looked up by id, not form.<name> — HTMLFormElement.name is the form's own
@@ -344,6 +434,64 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
     const total = '$' + (d.price * d.qty);
     summaryTot.textContent = total;
     if (payAmount) payAmount.textContent = total;
+
+    renderTray(d);
+    // Broadcast so the menu buttons and the sticky bar can follow along
+    // without either of them reaching into this module.
+    document.dispatchEvent(new CustomEvent('box:change', { detail: {
+      boxLabel: d.boxLabel, pieces: d.pieces, qty: d.qty,
+      flavors: d.flavors, total: total, max: maxFlavors()
+    } }));
+  }
+
+  /* Spread the pieces evenly across the chosen flavors, remainder to the
+     first ones picked, so six bites over four flavors reads 2/2/1/1. */
+  function distribute(pieces, flavors) {
+    if (!flavors.length) return [];
+    const base = Math.floor(pieces / flavors.length);
+    const rem  = pieces % flavors.length;
+    return flavors.map(function (f, i) { return { flavor: f, count: base + (i < rem ? 1 : 0) }; });
+  }
+
+  let lastFilled = 0;
+  function renderTray(d) {
+    if (!tray) return;
+    const split = distribute(d.pieces, d.flavors);
+    const bites = [];
+    split.forEach(function (part) {
+      for (let i = 0; i < part.count; i++) bites.push(part.flavor);
+    });
+
+    tray.dataset.size = String(d.pieces);
+    tray.replaceChildren.apply(tray, Array.from({ length: d.pieces }, function (_, i) {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      if (bites[i]) {
+        slot.classList.add('is-filled');
+        slot.style.setProperty('--slot', FLAVOR_COLOR[bites[i]] || '#F2DFC0');
+        if (!reduced && i >= lastFilled) slot.classList.add('is-new');
+      }
+      return slot;
+    }));
+    lastFilled = bites.length;
+
+    trayLegend.replaceChildren.apply(trayLegend, split.map(function (part) {
+      const li = document.createElement('li');
+      const sw = document.createElement('i');
+      sw.style.setProperty('--slot', FLAVOR_COLOR[part.flavor] || '#F2DFC0');
+      const b = document.createElement('b');
+      b.textContent = part.count;
+      li.append(sw, b, document.createTextNode(' ' + part.flavor));
+      return li;
+    }));
+
+    const room = d.pieces - bites.length;
+    trayStatus.textContent = !d.flavors.length
+      ? 'Pick a flavor to start filling the box.'
+      : d.flavors.length >= maxFlavors()
+        ? 'Box full — ' + d.pieces + ' bites across ' + d.flavors.length + ' flavors.'
+        : 'Room for ' + (maxFlavors() - d.flavors.length) + ' more flavor'
+          + (maxFlavors() - d.flavors.length === 1 ? '' : 's') + (room ? '' : '') + '.';
   }
 
   function setFieldError(input, show) {
@@ -470,4 +618,85 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
 
   applyFlavorCap();
   renderSummary();
+})();
+
+
+/* =========================================================
+   Menu ↔ form, and the sticky order bar
+   The flavor cards drive the real checkboxes rather than keeping a second
+   copy of the state, so the two can never disagree.
+   ========================================================= */
+(function menuSync() {
+  const adds = Array.from(document.querySelectorAll('.flavor__add'));
+  const bar  = document.getElementById('orderBar');
+  if (!adds.length && !bar) return;
+
+  const inputFor = function (name) {
+    return document.querySelector('#flavorGrid input[value="' + CSS.escape(name) + '"]');
+  };
+
+  adds.forEach(function (btn) {
+    const input = inputFor(btn.dataset.add);
+    if (!input) return;
+    if (input.dataset.soldOut === 'true') {
+      btn.disabled = true;
+      btn.textContent = 'Sold out';
+      return;
+    }
+    btn.addEventListener('click', function () {
+      if (input.disabled && !input.checked) {
+        btn.textContent = 'Box is full';
+        setTimeout(function () { btn.textContent = 'Add to box'; }, 1400);
+        return;
+      }
+      input.checked = !input.checked;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+
+  const barBox = document.getElementById('barBox');
+  const barFlv = document.getElementById('barFlavors');
+  const barTot = document.getElementById('barTotal');
+
+  document.addEventListener('box:change', function (e) {
+    const d = e.detail;
+    adds.forEach(function (btn) {
+      const input = inputFor(btn.dataset.add);
+      if (!input || input.dataset.soldOut === 'true') return;
+      const on = input.checked;
+      btn.classList.toggle('is-added', on);
+      btn.textContent = on ? 'In your box' : 'Add to box';
+      btn.setAttribute('aria-pressed', String(on));
+    });
+
+    if (!bar) return;
+    barBox.textContent = d.boxLabel + (d.qty > 1 ? ' ×' + d.qty : '');
+    barFlv.textContent = d.flavors.length ? d.flavors.join(', ') : 'no flavors yet';
+    barTot.textContent = d.total;
+  });
+
+  /* The bar is only useful between the hero and the form: before that there
+     is nothing to finish, and while the form is on screen it just covers it. */
+  if (bar) {
+    const orderSection = document.getElementById('order');
+    const hero = document.getElementById('top');
+    let formVisible = false;
+
+    if ('IntersectionObserver' in window && orderSection) {
+      new IntersectionObserver(function (entries) {
+        formVisible = entries[0].isIntersecting;
+        update();
+      }, { threshold: 0.08 }).observe(orderSection);
+    }
+
+    const update = function () {
+      const pastHero = hero ? window.scrollY > hero.offsetHeight * 0.7 : window.scrollY > 400;
+      const show = pastHero && !formVisible;
+      bar.hidden = false;
+      bar.classList.toggle('is-up', show);
+      document.body.classList.toggle('has-bar', show);
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
 })();

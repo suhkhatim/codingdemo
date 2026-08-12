@@ -106,6 +106,7 @@ code { font-family: var(--mono); font-size: .92em; }
 .wrap { width: min(1180px, 100% - (var(--gutter) * 2)); margin-inline: auto; }
 .wrap--narrow { width: min(760px, 100% - (var(--gutter) * 2)); }
 
+section[id] { scroll-margin-top: 84px; }
 .section { padding-block: var(--section-y); background: var(--paper); }
 .section--tint { background: var(--sand); }
 .section--dark { background: var(--navy-deep); }
@@ -695,4 +696,166 @@ select {
   .reveal { opacity: 1; transform: none; }
   .sticker { animation: none; }
   .flavor:hover, .flavor:nth-child(even):hover, .box-card--featured, .box-card--featured:hover { transform: none; rotate: 0deg; }
+}
+
+/* =========================================================
+   INTERACTIVE PIECES
+   ========================================================= */
+
+/* ---- add-to-box, on the menu cards ---- */
+.flavor { display: flex; flex-direction: column; }
+.flavor__add {
+  margin-top: auto; align-self: flex-start;
+  background: transparent; border: 2px solid var(--navy-deep); color: var(--navy-deep);
+  border-radius: var(--r-pill); padding: .4rem .9rem;
+  font-size: .8rem; font-weight: 700; cursor: pointer;
+  margin-top: 1rem;
+  transition: background .18s, color .18s, border-color .18s, transform .18s;
+}
+.flavor__add:hover { background: var(--navy-deep); color: #fff; transform: translateY(-1px); }
+.flavor__add.is-added { background: var(--butter); border-color: var(--navy-deep); color: var(--navy-deep); }
+.flavor__add.is-added::before { content: "✓ "; }
+.flavor--feature .flavor__add { margin-top: 1.2rem; }
+.flavor.is-out .flavor__add { opacity: .4; pointer-events: none; }
+
+/* ---- the box tray ----
+   Bites are distributed across the real piece count, so the tray is a
+   picture of the actual order rather than a decorative graphic. */
+.tray {
+  display: grid; gap: .4rem; padding: .7rem; width: max-content; max-width: 100%;
+  background: var(--navy-dark); border-radius: var(--r-md);
+}
+/* Fixed cell size across every box: a bite is a bite, so a party tray should
+   look like more bites rather than bigger ones. */
+.tray[data-size="6"]  { grid-template-columns: repeat(3, var(--bite, 3rem)); }
+.tray[data-size="12"] { grid-template-columns: repeat(4, var(--bite, 3rem)); }
+.tray[data-size="24"] { grid-template-columns: repeat(6, var(--bite, 3rem)); }
+@media (max-width: 430px) { .tray { --bite: 2.4rem; } }
+.slot {
+  aspect-ratio: 1; border-radius: 32%;
+  border: 1.5px dashed rgba(255,255,255,.2); background: transparent;
+  transition: background .25s ease, border-color .25s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.slot.is-filled {
+  border-color: transparent; border-style: solid;
+  background: var(--slot);
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,.14), inset 0 2px 3px rgba(255,255,255,.35);
+}
+.slot.is-new { animation: slot-pop .4s cubic-bezier(.34,1.56,.64,1); }
+@keyframes slot-pop { 0% { transform: scale(.4); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+
+.tray-legend { display: flex; flex-wrap: wrap; gap: .45rem .95rem; margin-top: .75rem; }
+.tray-legend li { display: flex; align-items: center; gap: .4rem; font-size: .82rem; color: var(--ink-soft); }
+.tray-legend i { width: .8rem; height: .8rem; border-radius: 32%; background: var(--slot); flex: none; }
+.tray-legend b { font-variant-numeric: tabular-nums; color: var(--navy-deep); }
+.tray__status { margin-top: .6rem; font-size: .84rem; color: var(--ink-faint); }
+
+/* ---- crumb wipe ---- */
+.wipe__stage {
+  position: relative; overflow: hidden; border-radius: var(--r-lg);
+  border: 1px solid var(--line); box-shadow: var(--shadow-md);
+  aspect-ratio: 16 / 9; background: #DCC8A6; touch-action: pan-y;
+}
+.wipe__art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wipe__art--plain { background: #DCC8A6; }
+.wipe__art--plain ellipse { fill: #F0E7D6; }
+.wipe__art--tang  { background: #E8CFA4; clip-path: inset(0 0 0 var(--wipe)); }
+.wipe__art--tang ellipse { fill: #FBF3E4; }
+
+.wipe__tag {
+  position: absolute; top: .8rem; z-index: 2;
+  font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  padding: .3rem .7rem; border-radius: var(--r-pill);
+  background: var(--navy-deep); color: #fff;
+}
+.wipe__tag--l { left: .8rem; }
+.wipe__tag--r { right: .8rem; background: var(--butter); color: var(--navy-deep); }
+
+.wipe__handle {
+  position: absolute; top: 0; bottom: 0; left: var(--wipe);
+  width: 3px; margin-left: -1.5px; background: var(--navy-deep); z-index: 3; pointer-events: none;
+}
+.wipe__handle span {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 2.6rem; height: 2.6rem; border-radius: 50%;
+  background: var(--butter); border: 2.5px solid var(--navy-deep);
+  box-shadow: 0 3px 0 rgba(14,42,99,.3);
+}
+.wipe__handle span::before, .wipe__handle span::after {
+  content: ""; position: absolute; top: 50%; width: 0; height: 0;
+  border-block: 5px solid transparent;
+}
+.wipe__handle span::before { left: .5rem; transform: translateY(-50%); border-right: 7px solid var(--navy-deep); }
+.wipe__handle span::after  { right: .5rem; transform: translateY(-50%); border-left: 7px solid var(--navy-deep); }
+
+/* A real range input, stretched over the stage: pointer drag and arrow keys
+   both work, and it is announced properly, without a custom drag handler. */
+.wipe__range {
+  position: absolute; inset: 0; z-index: 4;
+  width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize;
+  appearance: none; background: transparent;
+}
+.wipe__range::-webkit-slider-thumb { appearance: none; width: 3rem; height: 100%; }
+.wipe__range::-moz-range-thumb { width: 3rem; height: 100%; border: 0; opacity: 0; }
+.wipe__range:focus-visible { opacity: 1; outline: 3px solid var(--navy); outline-offset: 3px; }
+
+.wipe__captions { display: grid; gap: 1.4rem; margin-top: 1.4rem; }
+@media (min-width: 760px) { .wipe__captions { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+.wipe__captions h3 { font-size: 1.2rem; color: var(--navy-deep); margin-bottom: .45rem; }
+.wipe__captions p { font-size: .94rem; color: var(--ink-soft); }
+
+/* ---- week status ---- */
+.week__status {
+  margin-top: clamp(2rem, 4vw, 3rem); padding: .9rem 1.2rem;
+  background: rgba(255,255,255,.07); border-left: 3px solid var(--butter);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: .95rem; color: var(--on-dark-soft); max-width: 62ch;
+}
+.week__status strong { color: var(--butter); }
+.week__day.is-today .week__name {
+  box-shadow: 0 0 0 4px rgba(240,194,75,.3);
+  outline: 2px solid var(--butter); outline-offset: 2px;
+}
+
+/* ---- copyable handles ---- */
+.copyable {
+  background: none; border: 0; padding: .1rem .2rem; margin: -.1rem -.2rem;
+  font: inherit; font-size: .82rem; color: var(--navy-deep); font-weight: 700;
+  cursor: pointer; border-radius: 4px; text-align: right; word-break: break-all;
+  border-bottom: 1px dashed var(--line); transition: background .15s, color .15s;
+}
+.copyable:hover { background: var(--butter-soft); }
+.copyable.is-copied { background: var(--butter); }
+.copyable.is-copied::after { content: " copied"; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }
+
+/* ---- sticky order bar ---- */
+.orderbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 120;
+  background: var(--navy-deep); color: #fff;
+  border-top: 3px solid var(--butter);
+  box-shadow: 0 -8px 30px rgba(8,25,60,.28);
+  transform: translateY(110%); transition: transform .35s cubic-bezier(.2,.7,.3,1);
+}
+.orderbar.is-up { transform: translateY(0); }
+/* Reserve the bar's height while it is up, or it sits on top of whatever is
+   at the bottom of the page and eats taps meant for the content. */
+body.has-bar { padding-bottom: 4.6rem; }
+.orderbar__inner {
+  display: flex; align-items: center; gap: 1rem;
+  padding-block: .7rem; min-height: 60px;
+}
+.orderbar__box { display: grid; min-width: 0; }
+.orderbar__box strong { font-family: var(--display); font-size: 1.02rem; line-height: 1.2; }
+.orderbar__box span { font-size: .78rem; color: var(--on-dark-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.orderbar__total { margin-left: auto; display: flex; align-items: baseline; gap: .5rem; flex: none; }
+.orderbar__total span { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--on-dark-soft); }
+.orderbar__total strong { font-family: var(--display); font-size: 1.4rem; color: var(--butter); font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) {
+  .orderbar__total span { display: none; }
+  .orderbar__box span { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot.is-new { animation: none; }
+  .orderbar { transition: none; }
 }
