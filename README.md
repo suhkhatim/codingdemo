@@ -1,13 +1,14 @@
 # The Yeast Coast — website
 
-A single-page site for an at-home Hokkaido milk bread business. Plain HTML, CSS,
-and JavaScript — no build step, no dependencies, no server. Open `index.html` in
-a browser and it works.
+A single-page site for an at-home Hokkaido milk bread business. Plain HTML, CSS
+and JavaScript — no build step, no dependencies, no server.
 
 ```
 index.html    markup and copy
 styles.css    all styling
-script.js     branding, nav, scroll reveal, order form
+fonts.css     two self-hosted webfaces, inlined as data URIs
+script.js     config, weekly stock, photo slots, order form
+photos/       your photos — see photos/README.md
 ```
 
 ## Run it locally
@@ -16,98 +17,96 @@ script.js     branding, nav, scroll reveal, order form
 npx http-server -p 8080     # or: python3 -m http.server 8080
 ```
 
-Then open http://localhost:8080.
+## The three things to do before this goes live
 
-## Make it yours
+### 1. Set your email
 
-### 1. Name and contact details
+`CONFIG.orderEmail` at the top of `script.js` is `hello@example.com`. Every
+order button routes there, so nothing reaches you until you change it. Check
+`instagram` on the line below it too.
 
-Everything identifying lives in one block at the top of `script.js`:
+### 2. Add photos
+
+See `photos/README.md`. Three files, exact names, and they appear automatically.
+Until then the page shows labelled placeholders — it looks deliberate, not
+broken, but photos are the single biggest improvement available to this site.
+
+### 3. Rewrite the baker's note
+
+The "Who bakes it" section in `index.html` is placeholder copy in a generic
+voice, marked with a comment. It is the most valuable text on the page and the
+only part a competitor can't copy. Two paragraphs in your own words, and sign it
+with your actual name.
+
+## Updating it each week
+
+One object, near the top of `script.js`:
 
 ```js
-const CONFIG = {
-  businessName: 'The Yeast Coast',
-  orderEmail:   'hello@example.com',   // where order emails land
-  instagram:    'theyeastcoast',       // handle, no @
-  pickupWeekday: 6,                    // 0=Sun … 6=Sat
-  leadTimeDays:  3,                    // earliest pickup, days from today
-  pickupSlots:   6                     // how many upcoming dates to offer
-};
+thisWeek: {
+  boxesTotal: 20,
+  boxesLeft:  6,
+  soldOut:    ['Ube']     // names must match the flavor list exactly
+}
 ```
 
-The name is written into every `[data-business-name]` element and the page title
-at load, so changing it here changes it everywhere. **Set `orderEmail` before you
-share the site** — orders go nowhere until you do.
+That drives the bar under the hero, the meter, and the sold-out treatment —
+sold-out flavors get stamped on the menu and locked in the order form so nobody
+can order one. A mistyped name logs a warning in the browser console rather than
+failing silently.
 
-The `<title>` and `<meta name="description">` in `index.html` are also worth
-editing directly, since search engines and link previews read the HTML before the
-script runs.
+The pickup date is worked out from `pickupWeekday` and `leadTimeDays`, so it
+rolls forward on its own and needs no weekly edit.
 
-### 2. Prices and box sizes
+## Prices, boxes, flavors
 
-Box sizes are declared in two places that need to agree:
-
-- `index.html` → the `.boxes__grid` cards, for display
-- `index.html` → the `input[name="box"]` radios in the order form, which carry
-  the real numbers as data attributes:
+Box sizes live in two places that must agree: the display cards in
+`.boxes__grid`, and the `input[name="box"]` radios in the order form, which
+carry the real numbers:
 
 ```html
 <input type="radio" name="box" value="12" data-price="22" data-max="3">
 ```
 
-`value` is the piece count, `data-price` the dollar price, `data-max` how many
-flavors fit in that box. The form's live total and flavor cap both read from
-these, so changing a price here is enough — no JS edit needed.
+`value` is the piece count, `data-price` the dollars, `data-max` how many
+flavors fit. The live total and the flavor cap both read from these, so changing
+a price is a one-attribute edit.
 
-### 3. Flavors
-
-Two lists, also kept in sync by hand:
-
-- the `.menu-grid` cards in the Flavors section (name + description)
-- the checkboxes in `#flavorGrid` in the order form
-
-Only the order-form `value` attributes appear in the order that gets emailed.
+Flavors likewise live in the menu cards, the order-form checkboxes, and the
+`FLAVORS` array in `script.js` (used only to sanity-check `soldOut`).
 
 ## How ordering works
 
-There's no backend and nothing is charged. The form validates in the browser,
-then either:
+No backend, nothing charged. The form validates in the browser, then either
+opens the customer's mail app with a formatted ticket addressed to
+`orderEmail`, or copies the same ticket for pasting into an Instagram DM.
 
-- **Send order by email** — opens the customer's mail app with a formatted order
-  pre-filled and addressed to `orderEmail`. They still have to hit send.
-- **Copy for Instagram DM** — copies the same summary to the clipboard and opens
-  your Instagram profile so they can paste it into a DM.
-
-Both are deliberately low-tech: no signup, no fees, no order data passing through
-a third party. The trade-off is that an order only reaches you if the customer
-completes the send, so it's worth confirming each one by reply.
-
-If you outgrow that, the natural next step is pointing the form at a hosted form
-service (Formspree, Netlify Forms) — replace the `submit` handler in `script.js`
-with a `fetch` POST and keep everything else.
+The trade-off: an order only reaches you if the customer completes the send, so
+confirm each one by reply. If you outgrow that, point the `submit` handler at a
+hosted form service (Formspree, Netlify Forms) and keep everything else.
 
 ## Publishing
 
-The site is three static files, so anything that serves static files works.
-GitHub Pages: push to your default branch, then Settings → Pages → deploy from
-that branch's root.
+Three static files plus fonts and photos. GitHub Pages: push, then
+Settings → Pages → deploy from the branch root.
 
 ## Before you take real orders
 
-The FAQ contains two things written as placeholders that carry legal weight in
-most places, and you should check both against your local rules:
+Two bits of the FAQ carry legal weight and are written as placeholders:
 
 - the allergen line under **What's in them?**
-- the cottage-food notice at the bottom of the FAQ ("Made in a home kitchen that
-  is not subject to routine inspection by a health department")
+- the cottage-food notice at the foot of the FAQ
 
-Many US states require wording close to that second line on home-baked goods sold
-to the public, and some require it on the packaging too. The exact sentence
-varies by state — confirm what yours asks for.
+Most US states require wording close to that second line for home-baked goods
+sold to the public, sometimes on the packaging too, and the exact sentence
+varies. Confirm what yours asks for.
 
 ## Notes
 
-- Responsive down to 320px, no horizontal scroll.
-- Honors `prefers-reduced-motion` — animations and scroll reveals turn off.
-- Keyboard accessible with visible focus rings; the custom checkboxes are real
-  inputs, visually hidden rather than replaced.
+- Responsive to 320px with no horizontal scroll.
+- Every text/background pair clears WCAG AA, verified against rendered colors.
+- Honors `prefers-reduced-motion` — reveals, the sticker, card tilts and the
+  scroll-driven bake all switch off.
+- Fonts are Fraunces and Schibsted Grotesk, both SIL Open Font License 1.1,
+  inlined so there is no CDN dependency. Regenerate with
+  `scratchpad/mkfonts.mjs` if you ever want different faces.
