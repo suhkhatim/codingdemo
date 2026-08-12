@@ -57,7 +57,15 @@
 <header class="nav" id="nav">
   <div class="wrap nav__inner">
     <a class="brand" href="#top" aria-label="The Yeast Coast, home">
-      <svg class="brand__mark logo" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#logo-mark"/></svg>
+      <span class="brand__badge">
+        <!-- Ring reads out how far down the page you are. The mark is already
+             a circle, so the progress indicator is the mark's own edge. -->
+        <svg class="brand__ring" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <circle class="brand__ring-track" cx="24" cy="24" r="22.4"/>
+          <circle class="brand__ring-fill"  cx="24" cy="24" r="22.4"/>
+        </svg>
+        <svg class="brand__mark logo" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#logo-mark"/></svg>
+      </span>
       <span class="brand__name" data-business-name>The Yeast Coast</span>
     </a>
 
@@ -67,11 +75,14 @@
     </button>
 
     <nav class="nav__menu" id="navMenu" aria-label="Main">
-      <a href="#note">The baker</a>
-      <a href="#craft">The method</a>
-      <a href="#menu">Flavors</a>
-      <a href="#faq">FAQ</a>
-      <a class="btn btn--sm btn--primary" href="#order">Pre-order</a>
+      <div class="nav__links" id="navLinks">
+        <span class="nav__pill" id="navPill" aria-hidden="true"></span>
+        <a href="#note" data-spy="note">The baker</a>
+        <a href="#craft" data-spy="craft">The method</a>
+        <a href="#menu" data-spy="menu">Flavors</a>
+        <a href="#faq" data-spy="faq">FAQ</a>
+      </div>
+      <a class="btn btn--sm btn--primary nav__cta" href="#order">Pre-order</a>
     </nav>
   </div>
 </header>

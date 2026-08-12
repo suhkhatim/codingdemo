@@ -258,28 +258,92 @@ async function copyText(text) {
 
 /* =========================================================
    Nav
+   Three things: the island condenses once you leave the top, the mark's ring
+   reads out scroll progress, and a pill slides between the links to follow
+   the pointer and settle on whichever section you are actually in.
    ========================================================= */
 (function nav() {
+  const bar    = document.getElementById('nav');
   const toggle = document.getElementById('navToggle');
   const menu   = document.getElementById('navMenu');
-  const bar    = document.getElementById('nav');
-  if (!toggle || !menu || !bar) return;
+  if (!bar || !toggle || !menu) return;
 
-  toggle.addEventListener('click', function () {
-    const open = menu.classList.toggle('is-open');
+  /* ---- open / close ---- */
+  const setOpen = function (open) {
+    menu.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('nav-open', open);
+  };
+  toggle.addEventListener('click', function () { setOpen(!menu.classList.contains('is-open')); });
+  menu.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menu.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
   });
 
-  menu.addEventListener('click', function (e) {
-    if (e.target.closest('a')) {
-      menu.classList.remove('is-open');
-      toggle.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  const onScroll = function () { bar.classList.toggle('is-stuck', window.scrollY > 8); };
-  window.addEventListener('scroll', onScroll, { passive: true });
+  /* ---- island + progress ring ---- */
+  const brand = document.querySelector('.brand__badge');
+  let queued = false;
+  const onScroll = function () {
+    queued = false;
+    bar.classList.toggle('is-stuck', window.scrollY > 12);
+    if (!brand) return;
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - doc.clientHeight;
+    brand.style.setProperty('--progress', max > 0 ? Math.min(1, window.scrollY / max).toFixed(4) : 0);
+  };
+  window.addEventListener('scroll', function () {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(onScroll);
+  }, { passive: true });
   onScroll();
+
+  /* ---- sliding pill ---- */
+  const links = Array.from(menu.querySelectorAll('.nav__links a'));
+  const pill  = document.getElementById('navPill');
+  const wide  = window.matchMedia('(min-width: 861px)');
+  let current = null;
+
+  const moveTo = function (link) {
+    if (!pill || !link || !wide.matches) return;
+    pill.style.left  = link.offsetLeft + 'px';
+    pill.style.width = link.offsetWidth + 'px';
+    pill.classList.add('is-on');
+  };
+  const settle = function () {
+    if (!pill) return;
+    if (current && wide.matches) moveTo(current);
+    else pill.classList.remove('is-on');
+  };
+
+  links.forEach(function (a) {
+    a.addEventListener('mouseenter', function () { moveTo(a); });
+    a.addEventListener('focus', function () { moveTo(a); });
+  });
+  menu.addEventListener('mouseleave', settle);
+  menu.addEventListener('focusout', function (e) {
+    if (!menu.contains(e.relatedTarget)) settle();
+  });
+  window.addEventListener('resize', settle);
+
+  /* ---- which section am I in ---- */
+  const spied = links.filter(function (a) { return a.dataset.spy; });
+  if (spied.length && 'IntersectionObserver' in window) {
+    const seen = new Map();
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { seen.set(en.target.id, en.intersectionRatio); });
+      let bestId = null, best = 0;
+      seen.forEach(function (ratio, id) { if (ratio > best) { best = ratio; bestId = id; } });
+      links.forEach(function (a) { a.classList.toggle('is-current', a.dataset.spy === bestId && best > 0); });
+      current = spied.find(function (a) { return a.dataset.spy === bestId && best > 0; }) || null;
+      settle();
+    }, { threshold: [0, .15, .35, .6], rootMargin: '-84px 0px -45% 0px' });
+
+    spied.forEach(function (a) {
+      const target = document.getElementById(a.dataset.spy);
+      if (target) io.observe(target);
+    });
+  }
 })();
 
 /* =========================================================
