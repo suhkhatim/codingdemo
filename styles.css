@@ -11,20 +11,23 @@
   --navy-deep:   #0E2A63;
   --navy-dark:   #08193C;
 
-  /* surface — neutrals biased cool so they read as chosen, not default */
+  /* surface — warm neutrals, the crumb side of the palette */
   --paper:       #FFFFFF;
-  --paper-tint:  #F1F4FA;
-  --paper-soft:  #FAFBFE;
-  --line:        #D6DEEE;
+  --sand:        #F6F0E2;   /* large alternating grounds */
+  --sand-deep:   #EBE1CB;   /* edges and hovers inside sand */
+  --paper-soft:  #FCFAF3;   /* input and choice grounds */
+  --line:        #E4DDCC;
 
-  /* ink */
+  /* accent — the high note. Reads on navy and as a fill; too pale to be
+     text on white, which is what --butter-deep is for. */
+  --butter:      #F0C24B;
+  --butter-soft: #FBEFCE;
+  --butter-deep: #8A6410;
+
+  /* ink — kept navy-biased so text ties back to the mark */
   --ink:         #16233F;
   --ink-soft:    #4A5875;
-  --ink-faint:   #7C88A2;
-
-  /* crust — the one warm note, reserved for bread */
-  --crust:       #E0A75C;
-  --crust-deep:  #C0813A;
+  --ink-faint:   #5E6980;   /* 4.8:1 on sand — it carries small labels, so it has to clear AA */
 
   /* semantic */
   --danger:      #B4302A;
@@ -95,7 +98,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .wrap--narrow { width: min(760px, 100% - (var(--gutter) * 2)); }
 
 .section { padding-block: var(--section-y); }
-.section--tint { background: var(--paper-tint); }
+.section--tint { background: var(--sand); }
 
 .section__head { max-width: 46ch; margin-bottom: clamp(2.5rem, 5vw, 3.75rem); }
 .section__head h2 { font-size: clamp(2rem, 1.4rem + 2.6vw, 3.1rem); margin-bottom: .7rem; color: var(--navy-deep); }
@@ -165,15 +168,21 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* =========================================================
    NAV
    ========================================================= */
+/* Transparent at rest so the hero wash runs unbroken underneath it; the
+   frosted panel only appears once there is content to sit over. */
 .nav {
   position: sticky; top: 0; z-index: 100;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s, box-shadow .3s, background .3s;
+}
+.nav.is-stuck {
   background: rgba(255,255,255,.86);
   backdrop-filter: saturate(150%) blur(14px);
   -webkit-backdrop-filter: saturate(150%) blur(14px);
-  border-bottom: 1px solid transparent;
-  transition: border-color .3s, box-shadow .3s;
+  border-bottom-color: var(--line);
+  box-shadow: 0 6px 20px rgba(14,42,99,.06);
 }
-.nav.is-stuck { border-bottom-color: var(--line); box-shadow: 0 6px 20px rgba(14,42,99,.06); }
 .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 72px; }
 
 .brand { display: inline-flex; align-items: center; gap: .65rem; }
@@ -227,12 +236,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* =========================================================
    HERO
    ========================================================= */
-.hero { position: relative; padding-top: clamp(2.5rem, 6vw, 5rem); overflow: hidden; }
+/* No overflow clip here: the wash has to run up behind the translucent nav,
+   or it lands as a hard seam at the nav's bottom edge. Anything it spills
+   sideways is caught by overflow-x on body. */
+.hero { position: relative; padding-top: clamp(2.5rem, 6vw, 5rem); }
 .hero::before {
-  content: ""; position: absolute; z-index: -1;
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
   width: 70vw; height: 70vw; max-width: 820px; max-height: 820px;
-  right: -18vw; top: -22vw;
-  background: radial-gradient(circle, rgba(26,63,146,.13), rgba(26,63,146,0) 68%);
+  right: -18vw; top: -30vw;
+  background: radial-gradient(circle, rgba(240,194,75,.30), rgba(240,194,75,0) 68%);
   border-radius: 50%;
 }
 .hero__inner {
@@ -274,7 +286,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   animation: slide 38s linear infinite;
   font-size: .8rem; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.82);
 }
-.marquee i { color: var(--crust); font-style: normal; }
+.marquee i { color: var(--butter); font-style: normal; }
 @keyframes slide { to { transform: translateX(-50%) } }
 
 /* =========================================================
@@ -305,10 +317,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .flavor:hover { transform: translateY(-4px); border-color: var(--navy); box-shadow: var(--shadow-md); }
 .flavor__tag {
   display: inline-block; font-size: .66rem; font-weight: 700; letter-spacing: .11em; text-transform: uppercase;
-  color: var(--ink-faint); background: var(--paper-tint); border-radius: var(--r-pill);
+  color: var(--ink-faint); background: var(--sand); border-radius: var(--r-pill);
   padding: .28rem .65rem; margin-bottom: .85rem;
 }
-.flavor__tag--core { color: var(--navy); background: rgba(26,63,146,.10); }
+/* Navy text on the butter tint rather than butter text — at .66rem bold the
+   accent itself does not hold contrast on a light ground. */
+.flavor__tag--core { color: var(--navy-deep); background: var(--butter-soft); }
 .flavor h3 { font-size: 1.22rem; margin-bottom: .45rem; color: var(--navy-deep); }
 .flavor p { font-size: .92rem; color: var(--ink-soft); line-height: 1.6; }
 
@@ -320,10 +334,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   position: relative; background: var(--paper); border: 1.5px solid var(--line);
   border-radius: var(--r-md); padding: 1.6rem 1.4rem; text-align: center;
 }
-.box-card--featured { border-color: var(--navy); box-shadow: var(--shadow-md); }
+.box-card--featured { border-color: var(--butter); background: var(--butter-soft); box-shadow: var(--shadow-md); }
 .box-card__badge {
   position: absolute; top: -.72rem; left: 50%; transform: translateX(-50%);
-  background: var(--navy); color: #fff; font-size: .66rem; font-weight: 700;
+  background: var(--butter); color: var(--navy-deep); font-size: .66rem; font-weight: 700;
   letter-spacing: .09em; text-transform: uppercase; padding: .28rem .8rem; border-radius: var(--r-pill);
   white-space: nowrap;
 }
@@ -340,8 +354,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .step__num {
   position: absolute; top: 0; left: 0;
   display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
-  border-radius: 50%; background: var(--navy); color: #fff;
-  font-family: var(--serif); font-size: 1.15rem;
+  border-radius: 50%; background: var(--butter); color: var(--navy-deep);
+  font-family: var(--serif); font-size: 1.15rem; font-weight: 700;
 }
 .step h3 { font-size: 1.3rem; margin-bottom: .55rem; color: var(--navy-deep); }
 .step p { color: var(--ink-soft); font-size: .97rem; }
@@ -445,7 +459,7 @@ select {
   display: flex; justify-content: space-between; align-items: baseline;
   margin-top: 1.3rem; padding-top: 1.1rem; border-top: 1px solid rgba(255,255,255,.2);
 }
-.summary__total strong { font-family: var(--serif); font-size: 1.9rem; color: var(--crust); font-variant-numeric: tabular-nums; }
+.summary__total strong { font-family: var(--serif); font-size: 1.9rem; color: var(--butter); font-variant-numeric: tabular-nums; }
 .summary__fine { margin-top: 1rem; font-size: .82rem; color: rgba(255,255,255,.58); line-height: 1.55; }
 
 /* =========================================================
@@ -469,8 +483,8 @@ select {
 
 .cottage {
   margin-top: 2rem; padding: 1rem 1.2rem;
-  border-left: 3px solid var(--navy);
-  background: var(--paper-tint);
+  border-left: 3px solid var(--butter);
+  background: var(--sand);
   border-radius: 0 var(--r-sm) var(--r-sm) 0;
   font-size: .87rem; color: var(--ink-soft); font-style: italic;
 }
@@ -490,6 +504,6 @@ select {
 .footer__col h4 { font-family: var(--sans); font-size: .76rem; letter-spacing: .13em; text-transform: uppercase; color: rgba(255,255,255,.52); margin-bottom: .9rem; }
 .footer__col li + li { margin-top: .55rem; }
 .footer__col a { font-size: .95rem; color: rgba(255,255,255,.86); transition: color .2s; }
-.footer__col a:hover { color: var(--crust); }
+.footer__col a:hover { color: var(--butter); }
 .footer__bottom { border-top: 1px solid rgba(255,255,255,.16); padding-block: 1.4rem 1.8rem; }
 .footer__bottom p { font-size: .84rem; color: rgba(255,255,255,.48); }
