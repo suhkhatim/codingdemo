@@ -5,31 +5,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Yeast Coast — Small-batch Japanese milk bread, baked at home</title>
 <meta name="description" content="Pillowy Hokkaido milk bread bites, made by hand in small batches with the tangzhong method. Pre-order by the box for weekend pickup.">
-<meta name="theme-color" content="#fff9f0">
+<meta name="theme-color" content="#ffffff">
 
 <!-- Open Graph -->
 <meta property="og:title" content="The Yeast Coast">
 <meta property="og:description" content="Pillowy Hokkaido milk bread bites, made by hand in small batches. Pre-order for weekend pickup.">
 <meta property="og:type" content="website">
 
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍞</text></svg>">
+<!-- Simplified badge: the arced type is illegible at 16px, so the loaves carry it. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%231A3F92'/><circle cx='50' cy='50' r='43' fill='none' stroke='%23fff' stroke-width='2.5'/><g transform='rotate(-24 50 50)'><rect x='21' y='34' width='58' height='14' rx='7' fill='%23fff'/><rect x='21' y='52' width='58' height='14' rx='7' fill='%23fff'/></g></svg>">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
+<!-- ============ LOGO SPRITE ============
+     Defined once, referenced by <use> in the nav and footer.
+     Both text runs sit on concentric arcs: the top baseline at r=66 grows
+     outward to r≈83, the bottom baseline at r=84 grows inward to r≈65, so
+     the two bands are the same width and the same distance from the ring.
+     ======================================================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="logo-mark" viewBox="0 0 200 200">
+    <circle class="logo__ground" cx="100" cy="100" r="99"/>
+    <circle class="logo__keyline" cx="100" cy="100" r="89" stroke-width="2.5"/>
+
+    <!-- arcs the type rides on; never painted -->
+    <path id="logo-arc-top" d="M 34,100 A 66,66 0 0 1 166,100" fill="none"/>
+    <path id="logo-arc-bot" d="M 16,100 A 84,84 0 0 0 184,100" fill="none"/>
+
+    <text class="logo__type" font-size="24" letter-spacing="3.4">
+      <textPath href="#logo-arc-top" startOffset="50%" text-anchor="middle">THE YEAST</textPath>
+    </text>
+    <text class="logo__type" font-size="27" letter-spacing="6">
+      <textPath href="#logo-arc-bot" startOffset="50%" text-anchor="middle">COAST</textPath>
+    </text>
+
+    <!-- the pause between the two runs, where a stamp would put one -->
+    <circle class="logo__dot" cx="25" cy="100" r="3.4"/>
+    <circle class="logo__dot" cx="175" cy="100" r="3.4"/>
+
+    <!-- two loaves, parallel rather than crossed, drawn on the same grid -->
+    <g transform="rotate(-24 100 100)">
+      <g transform="translate(-3,-14)">
+        <rect class="logo__loaf" x="52" y="89" width="96" height="22" rx="11"/>
+        <path class="logo__score" d="M68 96l9 8M86 95l9 8M104 95l9 8M122 96l9 8"/>
+      </g>
+      <g transform="translate(3,14)">
+        <rect class="logo__loaf" x="52" y="89" width="96" height="22" rx="11"/>
+        <path class="logo__score" d="M68 96l9 8M86 95l9 8M104 95l9 8M122 96l9 8"/>
+      </g>
+    </g>
+  </symbol>
+</svg>
+
 <!-- ============ NAV ============ -->
 <header class="nav" id="nav">
   <div class="wrap nav__inner">
     <a class="brand" href="#top" aria-label="The Yeast Coast, home">
-      <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-        <rect x="4" y="10" width="40" height="32" rx="11" fill="var(--crust)"/>
-        <rect x="4" y="10" width="40" height="24" rx="11" fill="var(--crust-light)"/>
-        <circle cx="17" cy="23" r="6" fill="var(--milk)" opacity=".55"/>
-        <circle cx="31" cy="23" r="6" fill="var(--milk)" opacity=".55"/>
-        <path d="M14 34h20" stroke="var(--crust-deep)" stroke-width="2" stroke-linecap="round" opacity=".35"/>
-      </svg>
+      <svg class="brand__mark logo" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#logo-mark"/></svg>
       <span class="brand__name" data-business-name>The Yeast Coast</span>
     </a>
 
@@ -84,18 +119,18 @@
             <stop offset="100%" stop-color="#C0803D"/>
           </radialGradient>
           <linearGradient id="panMetal" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%"  stop-color="#8C6A4E"/>
-            <stop offset="50%" stop-color="#6E5039"/>
-            <stop offset="100%" stop-color="#503829"/>
+            <stop offset="0%"  stop-color="#2E5CAB"/>
+            <stop offset="50%" stop-color="#1A3F92"/>
+            <stop offset="100%" stop-color="#0E2A63"/>
           </linearGradient>
           <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="9"/>
           </filter>
         </defs>
 
-        <ellipse cx="214" cy="360" rx="168" ry="30" fill="#C99A63" opacity=".28" filter="url(#soft)"/>
+        <ellipse cx="214" cy="360" rx="168" ry="30" fill="#1A3F92" opacity=".22" filter="url(#soft)"/>
         <rect x="26" y="26" width="368" height="368" rx="46" fill="url(#panMetal)"/>
-        <rect x="42" y="42" width="336" height="336" rx="36" fill="#3E2B1F"/>
+        <rect x="42" y="42" width="336" height="336" rx="36" fill="#08193C"/>
 
         <g class="pan__bites">
           <!-- 3x3 grid, generated by hand for control over highlights -->
@@ -477,7 +512,7 @@
 <footer class="footer">
   <div class="wrap footer__inner">
     <div class="footer__brand">
-      <span class="brand__name" data-business-name>The Yeast Coast</span>
+      <svg class="footer__mark logo logo--reversed" viewBox="0 0 200 200" aria-hidden="true" focusable="false"><use href="#logo-mark"/></svg>
       <p>Small-batch Japanese milk bread, baked at home and picked up warm.</p>
     </div>
     <div class="footer__col">
