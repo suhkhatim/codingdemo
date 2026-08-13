@@ -151,6 +151,17 @@ It is written in plain language rather than legalese, and it is not legal
 advice. If you have any doubt about your state's requirements, or you start
 shipping outside it, have someone local read it over.
 
+## Shareable box links
+
+Building a box writes the choices into the page's query string
+(`?box=12&qty=2&f=Classic%20Milk|Ube`), so a customer can bookmark it or send
+it to someone and have the box come back. Opening such a link restores the box;
+anything that has since sold out is dropped and the customer is told which.
+
+Nothing is stored on the device — no cookies, no localStorage — which is what
+keeps the privacy page's claims true. If you ever swap this for real storage,
+that page needs updating.
+
 ## Notes
 
 - Responsive to 320px with no horizontal scroll.

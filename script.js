@@ -680,8 +680,91 @@ async function copyText(text) {
     }
   });
 
+  /* ---- baker's choice: fill the box for you, respecting cap and sold-out ---- */
+  const surpriseBtn = document.getElementById('surpriseBtn');
+  const clearBtn    = document.getElementById('clearBtn');
+
+  function setFlavors(names) {
+    flavorInputs.forEach(function (i) { if (!isSoldOut(i)) i.checked = names.indexOf(i.value) !== -1; });
+    applyFlavorCap();
+    renderSummary();
+    flavorError.hidden = selectedFlavors().length > 0;
+  }
+
+  if (surpriseBtn) surpriseBtn.addEventListener('click', function () {
+    const pool = flavorInputs.filter(function (i) { return !isSoldOut(i); }).map(function (i) { return i.value; });
+    // Fisher-Yates, so every combination is equally likely.
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+    }
+    const picked = pool.slice(0, maxFlavors());
+    setFlavors(picked);
+    say('Baker\'s choice: ' + picked.join(', ') + '. Hit it again for another.');
+  });
+
+  if (clearBtn) clearBtn.addEventListener('click', function () {
+    setFlavors([]);
+    say('Cleared. Start again whenever.');
+  });
+
+  /* ---- a shareable box ----
+     The choices go in the query string, not in storage, so nothing is kept on
+     anyone's device and the privacy page stays accurate. */
+  function writeUrl(d) {
+    if (!window.history || !history.replaceState) return;
+    const q = new URLSearchParams();
+    q.set('box', String(d.pieces));
+    if (d.qty > 1) q.set('qty', String(d.qty));
+    if (d.flavors.length) q.set('f', d.flavors.join('|'));
+    history.replaceState(null, '', d.flavors.length ? '?' + q.toString() : location.pathname);
+  }
+
+  function readUrl() {
+    const q = new URLSearchParams(location.search);
+    if (!q.has('box') && !q.has('f')) return false;
+
+    const box = boxInputs.find(function (i) { return i.value === q.get('box'); });
+    if (box) box.checked = true;
+
+    const qn = parseInt(q.get('qty'), 10);
+    if (!Number.isNaN(qn)) qtyInput.value = Math.min(20, Math.max(1, qn));
+
+    const wanted = (q.get('f') || '').split('|').filter(Boolean);
+    flavorInputs.forEach(function (i) { i.checked = !isSoldOut(i) && wanted.indexOf(i.value) !== -1; });
+
+    const dropped = wanted.filter(function (n) {
+      const i = flavorInputs.find(function (x) { return x.value === n; });
+      return !i || isSoldOut(i);
+    });
+    applyFlavorCap();
+    if (dropped.length) say(dropped.join(' and ') + ' sold out this week, so ' +
+      (dropped.length === 1 ? 'it is' : 'they are') + ' not in the box. Everything else came through.', true);
+    return true;
+  }
+
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) shareBtn.addEventListener('click', async function () {
+    if (!selectedFlavors().length) { say('Pick a flavor first, then the link will have something in it.', true); return; }
+    if (await copyText(location.href)) {
+      shareBtn.classList.add('is-copied');
+      shareBtn.textContent = 'Link copied';
+      setTimeout(function () {
+        shareBtn.classList.remove('is-copied');
+        shareBtn.textContent = 'Copy a link to this box';
+      }, 1800);
+    }
+  });
+
+  const restored = readUrl();
   applyFlavorCap();
   renderSummary();
+  if (restored) {
+    document.dispatchEvent(new CustomEvent('box:restored'));
+  }
+
+  // Keep the URL in step after the first render, not during it.
+  document.addEventListener('box:change', function (e) { writeUrl(e.detail); });
 })();
 
 
@@ -763,4 +846,85 @@ async function copyText(text) {
     window.addEventListener('scroll', update, { passive: true });
     update();
   }
+})();
+
+
+/* =========================================================
+   Flavor filters
+   ========================================================= */
+(function filters() {
+  const chips = Array.from(document.querySelectorAll('.chip[data-filter]'));
+  const grid  = document.getElementById('menuGrid');
+  const count = document.getElementById('filterCount');
+  if (!chips.length || !grid) return;
+
+  const cards = Array.from(grid.querySelectorAll('.flavor'));
+  const matches = function (card, filter) {
+    if (filter === 'all') return true;
+    if (filter === 'available') return !card.classList.contains('is-out');
+    return card.dataset.kind === filter;
+  };
+
+  const apply = function (filter) {
+    let shown = 0;
+    cards.forEach(function (card) {
+      const on = matches(card, filter);
+      card.classList.toggle('is-filtered', !on);
+      if (on) shown++;
+    });
+    count.textContent = shown === cards.length
+      ? cards.length + ' flavors'
+      : 'Showing ' + shown + ' of ' + cards.length;
+    chips.forEach(function (c) {
+      const on = c.dataset.filter === filter;
+      c.classList.toggle('is-on', on);
+      c.setAttribute('aria-pressed', String(on));
+    });
+  };
+
+  chips.forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      grid.classList.add('is-swapping');
+      setTimeout(function () {
+        apply(chip.dataset.filter);
+        grid.classList.remove('is-swapping');
+      }, reduced ? 0 : 140);
+    });
+  });
+
+  apply('all');
+})();
+
+/* =========================================================
+   Reheat tabs — roving tabindex, arrow keys, home/end
+   ========================================================= */
+(function tabs() {
+  const list = document.querySelector('.tabs[role="tablist"]');
+  if (!list) return;
+  const tabs = Array.from(list.querySelectorAll('[role="tab"]'));
+
+  const select = function (tab, focus) {
+    tabs.forEach(function (t) {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) tab.focus();
+  };
+
+  tabs.forEach(function (tab) { tab.addEventListener('click', function () { select(tab, false); }); });
+
+  list.addEventListener('keydown', function (e) {
+    const i = tabs.indexOf(document.activeElement);
+    if (i < 0) return;
+    let next = null;
+    if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+    else if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+    else if (e.key === 'Home') next = tabs[0];
+    else if (e.key === 'End') next = tabs[tabs.length - 1];
+    if (!next) return;
+    e.preventDefault();
+    select(next, true);
+  });
 })();

@@ -250,8 +250,16 @@
       </p>
     </div>
 
-    <div class="menu-grid">
-      <article class="flavor flavor--feature reveal" data-flavor="Classic Milk">
+    <div class="filters reveal" role="group" aria-label="Filter flavors">
+      <button type="button" class="chip is-on" data-filter="all" aria-pressed="true">Everything</button>
+      <button type="button" class="chip" data-filter="core" aria-pressed="false">Always on</button>
+      <button type="button" class="chip" data-filter="rotating" aria-pressed="false">Rotating</button>
+      <button type="button" class="chip" data-filter="available" aria-pressed="false">Available this week</button>
+      <p class="filters__count" id="filterCount" role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="menu-grid" id="menuGrid">
+      <article class="flavor flavor--feature reveal" data-kind="core" data-flavor="Classic Milk">
         <figure class="photo photo--flavor">
           <img src="photos/classic-milk.jpg" alt="Classic milk bread bites, torn open" width="900" height="700">
           <div class="photo__ph" data-ph>
@@ -270,49 +278,49 @@
         </div>
       </article>
 
-      <article class="flavor reveal" data-flavor="Honey Butter">
+      <article class="flavor reveal" data-kind="core" data-flavor="Honey Butter">
         <span class="flavor__tag flavor__tag--core">Always on</span>
         <h3>Honey Butter</h3>
         <p>Wildflower honey folded through, then a second glaze while it's still too hot to touch.</p>
         <button type="button" class="flavor__add" data-add="Honey Butter">Add to box</button>
       </article>
 
-      <article class="flavor reveal" data-flavor="Hokkaido Custard">
+      <article class="flavor reveal" data-kind="core" data-flavor="Hokkaido Custard">
         <span class="flavor__tag flavor__tag--core">Always on</span>
         <h3>Hokkaido Custard</h3>
         <p>A loose vanilla milk custard, piped in after baking so it stays properly runny.</p>
         <button type="button" class="flavor__add" data-add="Hokkaido Custard">Add to box</button>
       </article>
 
-      <article class="flavor reveal" data-flavor="Cinnamon Sugar">
+      <article class="flavor reveal" data-kind="core" data-flavor="Cinnamon Sugar">
         <span class="flavor__tag flavor__tag--core">Always on</span>
         <h3>Cinnamon Sugar</h3>
         <p>Rolled twice — once in butter, once in cinnamon sugar. Best eaten standing over the box.</p>
         <button type="button" class="flavor__add" data-add="Cinnamon Sugar">Add to box</button>
       </article>
 
-      <article class="flavor reveal" data-flavor="Matcha White Chocolate">
+      <article class="flavor reveal" data-kind="rotating" data-flavor="Matcha White Chocolate">
         <span class="flavor__tag">Rotating</span>
         <h3>Matcha White Chocolate</h3>
         <p>Ceremonial-grade matcha in the dough, white chocolate melted into the middle.</p>
         <button type="button" class="flavor__add" data-add="Matcha White Chocolate">Add to box</button>
       </article>
 
-      <article class="flavor reveal" data-flavor="Black Sesame">
+      <article class="flavor reveal" data-kind="rotating" data-flavor="Black Sesame">
         <span class="flavor__tag">Rotating</span>
         <h3>Black Sesame</h3>
         <p>Toasted and ground here into a paste. Nutty, faintly savoury, properly grey inside.</p>
         <button type="button" class="flavor__add" data-add="Black Sesame">Add to box</button>
       </article>
 
-      <article class="flavor reveal" data-flavor="Ube">
+      <article class="flavor reveal" data-kind="rotating" data-flavor="Ube">
         <span class="flavor__tag">Rotating</span>
         <h3>Ube</h3>
         <p>Real purple yam, no extract. Earthy and sweet, and the colour everyone asks about.</p>
         <button type="button" class="flavor__add" data-add="Ube">Add to box</button>
       </article>
 
-      <article class="flavor reveal" data-flavor="Chocolate Hazelnut">
+      <article class="flavor reveal" data-kind="rotating" data-flavor="Chocolate Hazelnut">
         <span class="flavor__tag">Rotating</span>
         <h3>Chocolate Hazelnut</h3>
         <p>A dark chocolate hazelnut centre that goes molten if you warm it for ten seconds.</p>
@@ -450,6 +458,10 @@
             <label class="choice choice--check"><input type="checkbox" name="flavor" value="Ube"><span class="choice__body"><span class="choice__title">Ube</span></span></label>
             <label class="choice choice--check"><input type="checkbox" name="flavor" value="Chocolate Hazelnut"><span class="choice__body"><span class="choice__title">Chocolate Hazelnut</span></span></label>
           </div>
+          <div class="pick-tools">
+            <button type="button" class="linkish" id="surpriseBtn">Surprise me — baker's choice</button>
+            <button type="button" class="linkish" id="clearBtn">Clear</button>
+          </div>
           <p class="error" id="flavorError" hidden>Choose at least one flavor.</p>
         </fieldset>
 
@@ -516,6 +528,7 @@
               <li><span>Cash App</span><button type="button" class="copyable" data-pay="cashapp" data-copy>—</button></li>
               <li><span>Zelle</span><button type="button" class="copyable" data-pay="zelle" data-copy>—</button></li>
             </ul>
+            <button type="button" class="ticket__share" id="shareBtn">Copy a link to this box</button>
             <p class="ticket__fine">Put your name and pickup date in the payment note. Boxes are held once payment lands, not before — the ticket is confirmed by reply.</p>
           </div>
         </div>
@@ -570,6 +583,33 @@
         <dd>Happily. Two weeks' notice for anything over ten boxes. Send the form with the numbers in the notes.</dd>
       </div>
     </dl>
+
+    <section class="reheat reveal" aria-labelledby="reheatTitle">
+      <h3 id="reheatTitle">Bringing them back</h3>
+      <p class="reheat__lede">They are best the morning you collect them. After that, thirty seconds of effort gets you most of the way back.</p>
+      <div class="tabs" role="tablist" aria-label="Reheating method">
+        <button role="tab" id="tab-micro" aria-controls="panel-micro" aria-selected="true"  class="tab">Microwave</button>
+        <button role="tab" id="tab-oven"  aria-controls="panel-oven"  aria-selected="false" class="tab" tabindex="-1">Oven</button>
+        <button role="tab" id="tab-air"   aria-controls="panel-air"   aria-selected="false" class="tab" tabindex="-1">Air fryer</button>
+        <button role="tab" id="tab-froz"  aria-controls="panel-froz"  aria-selected="false" class="tab" tabindex="-1">From frozen</button>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="panel-micro" aria-labelledby="tab-micro" tabindex="0">
+        <p class="reheat__time">10 seconds</p>
+        <p>Lay a damp piece of kitchen paper over the top first. It stops the crumb drying while the steam does the work. Longer than fifteen seconds and it goes tough.</p>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="panel-oven" aria-labelledby="tab-oven" tabindex="0" hidden>
+        <p class="reheat__time">5 minutes at 300°F / 150°C</p>
+        <p>The best result if you have the patience — the outside firms up again and the inside goes soft. Straight on the rack, no foil.</p>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="panel-air" aria-labelledby="tab-air" tabindex="0" hidden>
+        <p class="reheat__time">3 minutes at 300°F / 150°C</p>
+        <p>Quick, and very good on the cinnamon sugar ones. Watch the custard-filled — the filling gets hotter than the bread looks.</p>
+      </div>
+      <div class="tabpanel" role="tabpanel" id="panel-froz" aria-labelledby="tab-froz" tabindex="0" hidden>
+        <p class="reheat__time">Thaw first, then any of the above</p>
+        <p>Out of the bag and on the counter for an hour. Don't reheat from frozen — the outside dries out before the middle wakes up.</p>
+      </div>
+    </section>
 
     <p class="cottage reveal">
       Made in a home kitchen that is not subject to routine inspection by a health department.
