@@ -1,11 +1,520 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chaos Confections — Cakes, Cake Bread &amp; Cookies</title>
+<meta name="description" content="Chaos Confections is a mountain bakery specializing in layer cakes, cake bread, and hand-piped cookies — plus piping lessons taught one-on-one by the baker.">
+<meta name="theme-color" content="#16295B">
+<link rel="icon" href="assets/logo.png" type="image/png">
+<link rel="stylesheet" href="css/styles.css">
+<script>document.documentElement.className = 'js';</script>
 </head>
 <body>
-    <h1>This is somch fun</h1>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="#top" aria-label="Chaos Confections — back to top">
+      <span class="nav__mark" aria-hidden="true">
+        <img src="assets/logo.png" alt="" width="44" height="44">
+        <span class="nav__mark-fallback">CC</span>
+      </span>
+      <span class="nav__wordmark">
+        <span class="nav__wordmark-top">Chaos</span>
+        <span class="nav__wordmark-bot">Confections</span>
+      </span>
+    </a>
+
+    <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+      <span class="nav__toggle-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="sr-only">Menu</span>
+    </button>
+
+    <nav class="nav__menu" id="navMenu" aria-label="Primary">
+      <ul class="nav__list">
+        <li><a href="#products">Products</a></li>
+        <li><a href="#lessons">Lessons</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#testimonials">Praise</a></li>
+      </ul>
+      <a class="btn btn--sm btn--primary nav__cta" href="#contact">Place an inquiry</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============================ HERO ============================ -->
+  <section class="hero" id="top">
+    <div class="hero__range" aria-hidden="true">
+      <svg viewBox="0 0 1440 520" preserveAspectRatio="xMidYMax slice" focusable="false">
+        <path class="range range--4" d="M0 300 L180 190 L330 285 L500 165 L690 300 L860 205 L1040 310 L1230 190 L1440 300 L1440 520 L0 520 Z"/>
+        <path class="range range--3" d="M0 355 L200 250 L370 350 L560 240 L760 355 L950 265 L1150 365 L1330 260 L1440 340 L1440 520 L0 520 Z"/>
+        <path class="range range--2" d="M0 415 L230 320 L430 415 L640 315 L850 420 L1060 330 L1270 425 L1440 355 L1440 520 L0 520 Z"/>
+        <path class="range range--1" d="M0 470 L260 395 L480 475 L720 390 L960 480 L1200 400 L1440 470 L1440 520 L0 520 Z"/>
+      </svg>
+    </div>
+
+    <div class="hero__inner">
+      <div class="hero__badge" id="heroBadge">
+        <div class="media media--badge" data-label="logo.png">
+          <img src="assets/logo.png" alt="Chaos Confections logo: a bearded baker holding a whisk of frosting against a mountain range." width="360" height="360" fetchpriority="high">
+        </div>
+      </div>
+
+      <p class="hero__eyebrow">Est. in a very small kitchen</p>
+      <h1 class="hero__title">Beautifully <em>chaotic</em> baking.</h1>
+      <p class="hero__lede">
+        Layer cakes, cake bread, and hand-piped cookies made in small batches —
+        and piping lessons taught by the baker who makes them.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#products">See what we bake</a>
+        <a class="btn btn--secondary" href="#lessons">Book a piping lesson</a>
+      </div>
+    </div>
+
+    <div class="hero__scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <i></i>
+    </div>
+  </section>
+
+  <!-- ============================ PRODUCTS ============================ -->
+  <section class="section section--products" id="products" aria-labelledby="products-h">
+    <div class="wrap">
+      <header class="section__head" data-reveal>
+        <p class="eyebrow">What we bake</p>
+        <h2 class="section__title" id="products-h">Three things, done properly.</h2>
+        <p class="section__lede">
+          We keep the menu short on purpose. Everything is baked to order, in batches small enough
+          that the baker still touches every single one.
+        </p>
+      </header>
+
+      <ul class="cards" id="productCards">
+
+        <li class="card" data-reveal style="--i:0">
+          <div class="media media--product" data-label="product-cakes.jpg">
+            <img src="assets/img/product-cakes.jpg" alt="A tall frosted layer cake finished with piped rosettes." width="1200" height="1500" loading="lazy">
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">Layer Cakes</h3>
+            <p class="card__blurb">Celebration cakes, tiered and hand-finished. Six flavors, rotating seasonally.</p>
+            <button class="card__toggle" type="button" aria-expanded="false" aria-controls="panel-cakes">
+              <span class="card__toggle-label">Details</span>
+              <span class="card__toggle-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="card__panel" id="panel-cakes">
+            <div class="card__panel-inner">
+              <dl class="spec">
+                <div><dt>Sizes</dt><dd>6", 8", 10", and tiered</dd></div>
+                <div><dt>Lead time</dt><dd>7 days · 14 tiered</dd></div>
+                <div><dt>From</dt><dd>$68</dd></div>
+              </dl>
+              <p class="card__note">
+                Brown butter vanilla, dark chocolate olive oil, spiced pear, lemon poppy,
+                black sesame, and one seasonal flavor we refuse to plan in advance.
+              </p>
+              <a class="link-arrow" href="#contact">Ask about a cake <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </li>
+
+        <li class="card" data-reveal style="--i:1">
+          <div class="media media--product" data-label="product-cake-bread.jpg">
+            <img src="assets/img/product-cake-bread.jpg" alt="A sliced loaf of cake bread with a crackled sugar top." width="1200" height="1500" loading="lazy">
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">Cake Bread</h3>
+            <p class="card__blurb">The loaf that can't decide what it is. Dense, buttery, sliceable, gone by Tuesday.</p>
+            <button class="card__toggle" type="button" aria-expanded="false" aria-controls="panel-bread">
+              <span class="card__toggle-label">Details</span>
+              <span class="card__toggle-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="card__panel" id="panel-bread">
+            <div class="card__panel-inner">
+              <dl class="spec">
+                <div><dt>Sizes</dt><dd>Full loaf · half loaf</dd></div>
+                <div><dt>Lead time</dt><dd>48 hours</dd></div>
+                <div><dt>From</dt><dd>$16</dd></div>
+              </dl>
+              <p class="card__note">
+                Brown sugar banana, olive oil citrus, cardamom apple, and a chocolate loaf
+                with a crackled sugar top that we are told is illegal in some households.
+              </p>
+              <a class="link-arrow" href="#contact">Ask about cake bread <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </li>
+
+        <li class="card" data-reveal style="--i:2">
+          <div class="media media--product" data-label="product-cookies.jpg">
+            <img src="assets/img/product-cookies.jpg" alt="Decorated cookies finished with fine piped royal icing detail." width="1200" height="1500" loading="lazy">
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">Cookies</h3>
+            <p class="card__blurb">Piped royal icing on one side of the case, brown butter chunk on the other.</p>
+            <button class="card__toggle" type="button" aria-expanded="false" aria-controls="panel-cookies">
+              <span class="card__toggle-label">Details</span>
+              <span class="card__toggle-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+          <div class="card__panel" id="panel-cookies">
+            <div class="card__panel-inner">
+              <dl class="spec">
+                <div><dt>Sold as</dt><dd>Dozen · half dozen</dd></div>
+                <div><dt>Lead time</dt><dd>5 days for decorated</dd></div>
+                <div><dt>From</dt><dd>$28/dozen</dd></div>
+              </dl>
+              <p class="card__note">
+                Custom decorated sets for weddings, launches, and birthdays — matched to your
+                colors. Corporate runs of 200+ are welcome with three weeks' notice.
+              </p>
+              <a class="link-arrow" href="#contact">Ask about cookies <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ LESSONS ============================ -->
+  <section class="section section--lessons" id="lessons" aria-labelledby="lessons-h">
+    <div class="wrap">
+      <header class="section__head" data-reveal>
+        <p class="eyebrow eyebrow--onDark">Learn from the baker</p>
+        <h2 class="section__title" id="lessons-h">Piping lessons, taught by hand.</h2>
+        <p class="section__lede">
+          Two hours at the bench with Marcus. You'll leave able to hold a bag properly,
+          control pressure, and pipe a border that doesn't wobble — which is most of the battle.
+        </p>
+      </header>
+
+      <div class="lessons__grid">
+
+        <div class="lessons__demo" data-reveal>
+          <div class="demo">
+            <div class="demo__head">
+              <h3 class="demo__title">Try it — drag to pipe</h3>
+              <button class="demo__clear" type="button" id="pipeClear">Clear</button>
+            </div>
+
+            <canvas class="demo__canvas" id="pipeCanvas"
+                    role="img"
+                    aria-label="A practice surface. Drag your pointer across it to draw a frosting line in the selected tip and color."></canvas>
+
+            <div class="demo__controls">
+              <fieldset class="demo__set">
+                <legend>Tip</legend>
+                <div class="chiprow" role="group">
+                  <button class="chip is-active" type="button" data-tip="round" aria-pressed="true">Round</button>
+                  <button class="chip" type="button" data-tip="star" aria-pressed="false">Star</button>
+                  <button class="chip" type="button" data-tip="ribbon" aria-pressed="false">Ribbon</button>
+                </div>
+              </fieldset>
+
+              <fieldset class="demo__set">
+                <legend>Color</legend>
+                <div class="chiprow" role="group">
+                  <button class="swatch is-active" type="button" data-color="#F8F1E3" aria-pressed="true"><span class="sr-only">Cream</span></button>
+                  <button class="swatch" type="button" data-color="#E4571D" aria-pressed="false"><span class="sr-only">Orange</span></button>
+                  <button class="swatch" type="button" data-color="#C69B4A" aria-pressed="false"><span class="sr-only">Gold</span></button>
+                </div>
+              </fieldset>
+            </div>
+
+            <p class="demo__hint">A toy, not a tutorial. The real thing involves considerably more butter.</p>
+          </div>
+        </div>
+
+        <div class="lessons__copy" data-reveal>
+          <ul class="tiers">
+            <li class="tier">
+              <div class="tier__head">
+                <h3>One-on-one</h3>
+                <p class="tier__price">$120<span>/2 hrs</span></p>
+              </div>
+              <p>Just you and the baker. Bring a goal — a birthday cake, a wobble you can't fix — and we work on that.</p>
+            </li>
+            <li class="tier">
+              <div class="tier__head">
+                <h3>Small group</h3>
+                <p class="tier__price">$65<span>/person</span></p>
+              </div>
+              <p>Four to eight people, three hours, everyone leaves with what they piped. Popular for birthdays.</p>
+            </li>
+            <li class="tier">
+              <div class="tier__head">
+                <h3>Teams &amp; private events</h3>
+                <p class="tier__price">Custom</p>
+              </div>
+              <p>We bring the bench to you. Built for team offsites and client events, up to twenty-four hands.</p>
+            </li>
+          </ul>
+
+          <div class="lessons__covered">
+            <h4>Every lesson covers</h4>
+            <ul class="ticks">
+              <li>Consistency — the difference between icing that holds and icing that slumps</li>
+              <li>Bag control, pressure, and the angle nobody tells you about</li>
+              <li>Round, star, and ribbon tips, and when each one is the wrong choice</li>
+              <li>Fixing your own mistakes without starting over</li>
+            </ul>
+          </div>
+
+          <a class="btn btn--secondary" href="#contact">Check lesson availability</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ ABOUT ============================ -->
+  <section class="section section--about" id="about" aria-labelledby="about-h">
+    <div class="wrap">
+      <div class="about__grid">
+
+        <div class="about__media" data-reveal>
+          <div class="media media--portrait" data-label="baker.jpg">
+            <img src="assets/img/baker.jpg" alt="Marcus Vela in his whites at the bench, piping a border onto a cake." width="1200" height="1500" loading="lazy">
+          </div>
+          <div class="about__stats">
+            <div class="stat"><strong>18</strong><span>years baking</span></div>
+            <div class="stat"><strong>2,400+</strong><span>cakes delivered</span></div>
+            <div class="stat"><strong>300+</strong><span>students taught</span></div>
+          </div>
+        </div>
+
+        <div class="about__copy" data-reveal>
+          <p class="eyebrow">The baker</p>
+          <h2 class="section__title" id="about-h">Marcus Vela</h2>
+          <p class="lead">
+            Marcus started as a line cook who kept getting sent to the pastry station because
+            he was the only one with the patience for it. Eighteen years later, that's the whole job.
+          </p>
+          <p>
+            He trained under a pastry chef who made him pipe the same border for six weeks before
+            letting him near a finished cake — a cruelty he now describes as the single most useful
+            thing anyone ever did for him. He spent nine years in hotel kitchens and restaurant
+            pastry departments, ran the dessert program at a place that no longer exists, and left
+            to open Chaos Confections out of a kitchen barely big enough to turn around in.
+          </p>
+          <p>
+            The name is a joke that stopped being one. Every good bake starts as a mess — flour
+            everywhere, four things happening at once, a timer going off somewhere. The craft
+            isn't avoiding the chaos. It's knowing exactly where it's headed.
+          </p>
+          <blockquote class="pullquote">
+            <p>“You can teach technique in an afternoon. Patience takes a bit longer.”</p>
+          </blockquote>
+          <p>
+            These days Marcus splits his week between orders and lessons, and he still finishes
+            every cake himself. If you order something, he made it. That's the entire business model.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ TESTIMONIALS ============================ -->
+  <section class="section section--testimonials" id="testimonials" aria-labelledby="testimonials-h">
+    <div class="wrap">
+      <header class="section__head section__head--center" data-reveal>
+        <p class="eyebrow eyebrow--onDark">Kind words</p>
+        <h2 class="section__title" id="testimonials-h">What people say afterward.</h2>
+      </header>
+
+      <div class="carousel" id="carousel" data-reveal>
+        <div class="carousel__viewport" id="carouselViewport">
+          <ul class="carousel__track" id="carouselTrack">
+
+            <li class="quote" role="group" aria-roledescription="quote">
+              <blockquote>
+                <p>“Our wedding cake was the only thing that went exactly to plan. Marcus delivered it himself, fixed a smudge in the doorway, and left before we could thank him properly. So: thank you properly.”</p>
+              </blockquote>
+              <p class="quote__by"><strong>Priya &amp; Tom R.</strong><span>Wedding, 140 guests</span></p>
+            </li>
+
+            <li class="quote" role="group" aria-roledescription="quote">
+              <blockquote>
+                <p>“We ordered 300 decorated cookies for a product launch on three weeks' notice. Every single one matched our brand color exactly. Our clients still bring it up.”</p>
+              </blockquote>
+              <p class="quote__by"><strong>Danielle O.</strong><span>Events lead, Northbend Studio</span></p>
+            </li>
+
+            <li class="quote" role="group" aria-roledescription="quote">
+              <blockquote>
+                <p>“I took the one-on-one lesson expecting to learn a few tricks. I left knowing why everything I'd been doing was wrong, which was substantially more useful and only slightly more painful.”</p>
+              </blockquote>
+              <p class="quote__by"><strong>Ana M.</strong><span>Home baker, took the 2-hour private</span></p>
+            </li>
+
+            <li class="quote" role="group" aria-roledescription="quote">
+              <blockquote>
+                <p>“The cake bread is a genuine problem for my household. We now order two so that one survives the drive home. It does not always work.”</p>
+              </blockquote>
+              <p class="quote__by"><strong>Jordan K.</strong><span>Regular, weekly-ish</span></p>
+            </li>
+
+          </ul>
+        </div>
+
+        <div class="carousel__ui">
+          <button class="carousel__arrow" type="button" id="carouselPrev" aria-label="Previous quote">
+            <span aria-hidden="true">←</span>
+          </button>
+          <div class="carousel__dots" id="carouselDots" role="tablist" aria-label="Choose a quote"></div>
+          <button class="carousel__arrow" type="button" id="carouselNext" aria-label="Next quote">
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <p class="sr-only" aria-live="polite" id="carouselStatus"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ CONTACT ============================ -->
+  <section class="section section--contact" id="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <div class="contact__grid">
+
+        <div class="contact__intro" data-reveal>
+          <p class="eyebrow">Inquiries</p>
+          <h2 class="section__title" id="contact-h">Tell us what you need.</h2>
+          <p class="section__lede">
+            Cakes, cookies, standing wholesale orders, lessons, or something we haven't
+            thought of yet. Marcus answers these himself, usually within two business days.
+          </p>
+
+          <dl class="contact__facts">
+            <div>
+              <dt>Studio</dt>
+              <dd>142 Ridgeline Avenue<br>Suite 3, Blue Ridge</dd>
+            </div>
+            <div>
+              <dt>Pickup hours</dt>
+              <dd>Thu – Sat, 9am – 4pm<br>By appointment otherwise</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd><a href="mailto:hello@chaosconfections.com">hello@chaosconfections.com</a></dd>
+            </div>
+            <div>
+              <dt>Wholesale</dt>
+              <dd>Standing weekly orders welcome — ask for the trade sheet.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="contact__formwrap" data-reveal>
+          <form class="form" id="contactForm" novalidate>
+
+            <p class="form__hp" aria-hidden="true">
+              <label for="company">Company (leave blank)</label>
+              <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+            </p>
+
+            <div class="field">
+              <label for="name">Name <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="name" name="name" autocomplete="name" required
+                     aria-describedby="name-err">
+              <p class="field__err" id="name-err" hidden>Please tell us your name.</p>
+            </div>
+
+            <div class="field">
+              <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required
+                     aria-describedby="email-err">
+              <p class="field__err" id="email-err" hidden>Please enter a valid email address.</p>
+            </div>
+
+            <div class="field">
+              <label for="type">This is a… <span class="req" aria-hidden="true">*</span></label>
+              <select id="type" name="type" required aria-describedby="type-err">
+                <option value="">Choose one</option>
+                <option value="Customer order">Customer order — cake, bread, or cookies</option>
+                <option value="Piping lesson">Piping lesson</option>
+                <option value="Business / wholesale">Business — wholesale or standing order</option>
+                <option value="Event / catering">Event or private class</option>
+                <option value="Something else">Something else</option>
+              </select>
+              <p class="field__err" id="type-err" hidden>Please choose an inquiry type.</p>
+            </div>
+
+            <div class="field">
+              <label for="date">Date needed <span class="opt">optional</span></label>
+              <input type="date" id="date" name="date">
+            </div>
+
+            <div class="field">
+              <label for="message">Details <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="message" name="message" rows="5" required aria-describedby="message-err"
+                        placeholder="Servings, flavors, colors, delivery — as much or as little as you know."></textarea>
+              <p class="field__err" id="message-err" hidden>A sentence or two is plenty — we just need somewhere to start.</p>
+            </div>
+
+            <button class="btn btn--primary btn--block" type="submit" id="formSubmit">Send inquiry</button>
+
+            <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <span class="footer__mark" aria-hidden="true">
+          <img src="assets/logo.png" alt="" width="64" height="64">
+          <span class="nav__mark-fallback">CC</span>
+        </span>
+        <p class="footer__tag">Beautifully chaotic baking,<br>out of a kitchen too small for it.</p>
+      </div>
+
+      <div class="footer__col">
+        <h2>Visit</h2>
+        <p>142 Ridgeline Avenue<br>Suite 3, Blue Ridge</p>
+        <p>Thu – Sat, 9am – 4pm</p>
+      </div>
+
+      <div class="footer__col">
+        <h2>Reach us</h2>
+        <p><a href="mailto:hello@chaosconfections.com">hello@chaosconfections.com</a></p>
+        <p><a href="tel:+15555550142">(555) 555-0142</a></p>
+      </div>
+
+      <div class="footer__col">
+        <h2>Follow</h2>
+        <ul class="footer__social">
+          <li><a href="#contact">Instagram</a></li>
+          <li><a href="#contact">Facebook</a></li>
+          <li><a href="#contact">Newsletter</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__base">
+      <p>&copy; <span id="year">2026</span> Chaos Confections. All rights reserved.</p>
+      <p><a href="#top">Back to top ↑</a></p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
 </body>
 </html>
