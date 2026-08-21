@@ -282,10 +282,25 @@ async function copyText(text) {
 
   /* ---- island + progress ring ---- */
   const brand = document.querySelector('.brand__badge');
+
+  /* Anything the island has to sit on top of that is too dark for navy type.
+     Selector-based rather than a hand-maintained list, so a new dark band
+     picks this up for free. */
+  const darkBands = Array.from(document.querySelectorAll('.section--dark, .weekbar, .footer'));
+  const overDark = function () {
+    const r = bar.getBoundingClientRect();
+    const y = r.top + r.height * 0.6;   // sample just below the island's middle
+    return darkBands.some(function (el) {
+      const b = el.getBoundingClientRect();
+      return b.top <= y && b.bottom >= y;
+    });
+  };
+
   let queued = false;
   const onScroll = function () {
     queued = false;
     bar.classList.toggle('is-stuck', window.scrollY > 12);
+    bar.classList.toggle('is-over-dark', overDark());
     if (!brand) return;
     const doc = document.documentElement;
     const max = doc.scrollHeight - doc.clientHeight;

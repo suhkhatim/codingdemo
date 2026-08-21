@@ -199,12 +199,38 @@ section[id] { scroll-margin-top: 84px; }
 .nav.is-stuck { padding-top: .5rem; }
 .nav.is-stuck .nav__inner {
   min-height: 56px;
-  background: rgba(255,253,248,.82);
+  background: rgba(255,253,248,.92);
   backdrop-filter: saturate(160%) blur(16px);
   -webkit-backdrop-filter: saturate(160%) blur(16px);
   border-color: rgba(14,42,99,.10);
   box-shadow: 0 2px 6px rgba(14,42,99,.05), 0 14px 34px rgba(14,42,99,.09);
 }
+
+/* The island crosses light and dark bands. A translucent white ground assumes
+   a light backdrop, so over the navy sections it washed into a pale slab and
+   took the navy mark and links down with it. Over those bands it inverts
+   instead: solid navy ground, reversed mark, light type. Solid, because a
+   filter that fails to composite must not cost legibility. */
+.nav.is-stuck.is-over-dark .nav__inner {
+  background: var(--navy-deep);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-color: rgba(255,255,255,.20);
+  box-shadow: 0 2px 8px rgba(0,0,0,.22), 0 16px 38px rgba(0,0,0,.26);
+}
+.nav.is-over-dark .brand__name { color: #fff; }
+.nav.is-over-dark .nav__links a { color: var(--on-dark-soft); }
+.nav.is-over-dark .nav__links a:hover,
+.nav.is-over-dark .nav__links a.is-current { color: var(--navy-deep); }
+.nav.is-over-dark .brand__ring-track { stroke: rgba(255,255,255,.24); }
+.nav.is-over-dark .brand__ring-fill  { stroke: var(--butter); }
+.nav.is-over-dark .logo {
+  --logo-ground: #fff; --logo-line: var(--navy); --logo-ink: var(--navy);
+  --logo-loaf: var(--navy); --logo-cut: #fff;
+}
+.nav.is-over-dark .nav__bars,
+.nav.is-over-dark .nav__bars::before,
+.nav.is-over-dark .nav__bars::after { background: #fff; }
 
 /* ---- brand + progress ring ---- */
 .brand { display: inline-flex; align-items: center; gap: 0; }
