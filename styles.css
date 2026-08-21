@@ -241,14 +241,18 @@ section[id] { scroll-margin-top: 84px; }
 }
 .brand:hover .brand__mark { transform: rotate(-14deg) scale(1.04); }
 
-/* max-width:none matters: the global `svg { max-width: 100% }` would clamp
+/* Sits 4px off the mark, not 8. At 8 the ring was taller than the condensed
+   island, so it crossed the pill's edge: half the arc on the bar, half on the
+   page behind it, with the rounded corner cutting through. Reads as a rim on
+   the mark now rather than a second circle.
+   max-width:none matters: the global `svg { max-width: 100% }` would clamp
    this to the badge's width and pull the ring inside the mark. */
 .brand__ring {
-  position: absolute; inset: -8px; max-width: none;
-  width: calc(100% + 16px); height: calc(100% + 16px);
+  position: absolute; inset: -4px; max-width: none;
+  width: calc(100% + 8px); height: calc(100% + 8px);
   transform: rotate(-90deg);
 }
-.brand__ring circle { fill: none; stroke-width: 2.6; stroke-linecap: round; }
+.brand__ring circle { fill: none; stroke-width: 2.4; stroke-linecap: round; }
 .brand__ring-track { stroke: rgba(14,42,99,.13); }
 .brand__ring-fill {
   stroke: var(--butter-deep);
@@ -281,8 +285,9 @@ section[id] { scroll-margin-top: 84px; }
     max-width: 16rem; margin-left: .7rem; opacity: 1; transform: none;
   }
 }
-/* The mark takes on a little more presence once it is carrying identity alone. */
-.nav.is-stuck .brand__badge { width: 46px; height: 46px; }
+/* Shrinks with the island rather than growing into it, so the mark and its
+   ring keep the same clearance inside the bar at both sizes. */
+.nav.is-stuck .brand__badge { width: 38px; height: 38px; }
 .brand__badge { transition: width .42s cubic-bezier(.2,.7,.3,1), height .42s cubic-bezier(.2,.7,.3,1); }
 
 /* ---- links with a sliding indicator ---- */
