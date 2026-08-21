@@ -1,4 +1,4 @@
-/* Self-hosted variable faces, inlined as data URIs — the artifact CSP blocks font CDNs.
+/* Self-hosted variable faces, inlined as data URIs. The artifact CSP blocks font CDNs.
    Fraunces and Schibsted Grotesk are both SIL Open Font License 1.1. */
 @font-face {
   font-family: 'Fraunces';

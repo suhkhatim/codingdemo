@@ -5,7 +5,7 @@
    ========================================================= */
 
 :root {
-  /* brand — taken from the logo */
+  /* brand, taken from the logo */
   --navy:        #1A3F92;
   --navy-deep:   #0E2A63;
   --navy-dark:   #08193C;
@@ -17,13 +17,13 @@
   --paper-soft:  #FCFAF3;
   --line:        #D9CFB6;
 
-  /* accent — reads on navy and as a fill; too pale to be type on light,
+  /* accent. Reads on navy and as a fill; too pale to be type on light,
      which is what --butter-deep exists for */
   --butter:      #F0C24B;
   --butter-soft: #FBEFCE;
   --butter-deep: #8A6410;
 
-  /* Third accent, taken from the ube on the menu — the one colour the product
+  /* Third accent, taken from the ube on the menu, the one colour the product
      itself supplies. It carries what CHANGES week to week; butter carries what
      stays fixed. --ube-light exists for dark grounds, --ube-deep for light. */
   --ube:       #6E4C9E;
@@ -36,14 +36,14 @@
   --ink-soft:    #3A4761;
   --ink-faint:   #5E6980;
 
-  /* on dark grounds — solid, so contrast can be measured honestly */
+  /* on dark grounds: solid, so contrast can be measured honestly */
   --on-dark:      #FFFFFF;
   --on-dark-soft: #C4CFE5;
 
   --danger: #B4302A;
   --ok:     #1F7A5C;
 
-  /* type — Fraunces has an optical-size axis, so display sizes get a
+  /* type. Fraunces has an optical-size axis, so display sizes get a
      different cut of the same face rather than just a bigger one */
   --display: 'Fraunces', 'Iowan Old Style', Palatino, Georgia, serif;
   --sans:    'Schibsted Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -453,7 +453,7 @@ section[id] { scroll-margin-top: 84px; }
 }
 
 /* =========================================================
-   THE METHOD — crumb comparison
+   THE METHOD: crumb comparison
    ========================================================= */
 .compare { display: grid; gap: 1.5rem; }
 @media (min-width: 760px) { .compare { grid-template-columns: 1fr 1fr; } }
@@ -551,7 +551,7 @@ section[id] { scroll-margin-top: 84px; }
 .boxes__fine { margin-top: 1.1rem; font-size: .86rem; color: var(--ink-faint); }
 
 /* =========================================================
-   THE WEEK — a real timeline, not three cards
+   THE WEEK: a real timeline, not three cards
    ========================================================= */
 .week { display: grid; gap: .5rem; }
 @media (min-width: 900px) {
@@ -758,7 +758,7 @@ select {
 .doc__back { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
 
 /* =========================================================
-   Q&A — a plain list beats an accordion at six questions
+   Q&A: a plain list beats an accordion at six questions
    ========================================================= */
 .qa-list { margin: 0; display: grid; gap: 2rem 3rem; }
 @media (min-width: 800px) { .qa-list { grid-template-columns: 1fr 1fr; } }
@@ -792,7 +792,7 @@ select {
 .footer__bottom p { font-size: .83rem; color: rgba(255,255,255,.5); }
 
 /* =========================================================
-   MOTION — everything optional switches off here
+   MOTION: everything optional switches off here
    ========================================================= */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

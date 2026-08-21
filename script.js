@@ -1,10 +1,10 @@
 /* =========================================================
-   The Yeast Coast — front-end behavior
+   The Yeast Coast: front-end behavior
    No dependencies, no build step.
    ========================================================= */
 
 /* ---------------------------------------------------------
-   CONFIG — the only block you need to edit.
+   CONFIG: the only block you need to edit.
    THIS_WEEK is the part to update each week.
    --------------------------------------------------------- */
 const CONFIG = {
@@ -17,7 +17,7 @@ const CONFIG = {
   pickupSlots:   6,                    // how many upcoming dates to offer
   cutoffDay:     'Wednesday',
 
-  // Boxes are paid up front — nothing is held until payment lands.
+  // Boxes are paid up front. Nothing is held until payment lands.
   payment: {
     cashApp: '$TheYeastCoast',         // your $cashtag
     zelle:   'hello@example.com'       // the phone or email your Zelle is registered to
@@ -36,7 +36,7 @@ const FLAVORS = [
   'Matcha White Chocolate', 'Black Sesame', 'Ube', 'Chocolate Hazelnut'
 ];
 
-/* Roughly what each one looks like baked — the tray is meant to read as
+/* Roughly what each one looks like baked. The tray is meant to read as
    the actual box, so these are food colours, not brand colours. */
 const FLAVOR_COLOR = {
   'Classic Milk':           '#F2DFC0',
@@ -59,7 +59,7 @@ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     el.textContent = CONFIG.businessName;
   });
 
-  // querySelectorAll, not querySelector — the privacy page carries a contact
+  // querySelectorAll, not querySelector: the privacy page carries a contact
   // link in the prose as well as the one in the footer.
   document.querySelectorAll('[data-contact="email"]').forEach(function (el) {
     el.href = 'mailto:' + CONFIG.orderEmail;
@@ -100,7 +100,7 @@ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 })();
 
 /* =========================================================
-   Pickup dates — shared by the week bar and the order form
+   Pickup dates, shared by the week bar and the order form
    ========================================================= */
 function upcomingPickups() {
   const dates = [];
@@ -153,7 +153,7 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
 })();
 
 /* =========================================================
-   The week — mark today, and say plainly whether ordering is open
+   The week: mark today, and say plainly whether ordering is open
    ========================================================= */
 (function weekStatus() {
   const days = document.querySelectorAll('.week__day');
@@ -171,7 +171,7 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
   if (today <= CUTOFF) {
     const daysLeft = CUTOFF - today;
     statusEl.innerHTML = daysLeft === 0
-      ? 'It\'s <strong>' + name + '</strong> — today is the cutoff. Orders for ' + nextBake + ' close tonight.'
+      ? 'It\'s <strong>' + name + '</strong>, and today is the cutoff. Orders for ' + nextBake + ' close tonight.'
       : 'It\'s <strong>' + name + '</strong>. You have ' + daysLeft + ' day' + (daysLeft === 1 ? '' : 's')
         + ' left to order for <strong>' + nextBake + '</strong>.';
   } else {
@@ -181,7 +181,7 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
 })();
 
 /* =========================================================
-   Sold-out flavors — marked on the menu and locked in the form
+   Sold-out flavors: marked on the menu and locked in the form
    ========================================================= */
 (function soldOut() {
   const out = (CONFIG.thisWeek.soldOut || []).filter(function (name) {
@@ -211,7 +211,7 @@ const PICKUP_FMT = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 
 })();
 
 /* =========================================================
-   Copy to clipboard — used by the payment handles
+   Copy to clipboard, used by the payment handles
    ========================================================= */
 async function copyText(text) {
   try {
@@ -244,7 +244,7 @@ async function copyText(text) {
 })();
 
 /* =========================================================
-   Crumb wipe — a real range input stretched over the stage, so pointer
+   Crumb wipe: a real range input stretched over the stage, so pointer
    drag, arrow keys and screen readers all work without a drag handler.
    ========================================================= */
 (function crumbWipe() {
@@ -348,7 +348,7 @@ async function copyText(text) {
 
 /* =========================================================
    Scroll-driven bake
-   The placeholder bites brown from pale to golden as the hero scrolls past —
+   The placeholder bites brown from pale to golden as the hero scrolls past:
    one orchestrated moment rather than a scattering of small ones.
    ========================================================= */
 (function bake() {
@@ -415,7 +415,7 @@ async function copyText(text) {
   const trayStatus  = document.getElementById('trayStatus');
   const dmBtn       = document.getElementById('dmBtn');
 
-  // Looked up by id, not form.<name> — HTMLFormElement.name is the form's own
+  // Looked up by id, not form.<name>: HTMLFormElement.name is the form's own
   // attribute, so form.name would shadow the text input and return a string.
   const nameInput  = document.getElementById('name');
   const emailInput = document.getElementById('email');
@@ -492,8 +492,8 @@ async function copyText(text) {
       row('Box', d.boxLabel),
       row('Bites', String(d.pieces)),
       row('Qty', d.qty + (d.qty === 1 ? ' box' : ' boxes')),
-      row('Flavors', d.flavors.length ? d.flavors.join(', ') : '—'),
-      row('Pickup', d.pickup || '—')
+      row('Flavors', d.flavors.length ? d.flavors.join(', ') : '…'),
+      row('Pickup', d.pickup || '…')
     );
     const total = '$' + (d.price * d.qty);
     summaryTot.textContent = total;
@@ -553,7 +553,7 @@ async function copyText(text) {
     trayStatus.textContent = !d.flavors.length
       ? 'Pick a flavor to start filling the box.'
       : d.flavors.length >= maxFlavors()
-        ? 'Box full — ' + d.pieces + ' bites across ' + d.flavors.length + ' flavors.'
+        ? 'Box full: ' + d.pieces + ' bites across ' + d.flavors.length + ' flavors.'
         : 'Room for ' + (maxFlavors() - d.flavors.length) + ' more flavor'
           + (maxFlavors() - d.flavors.length === 1 ? '' : 's') + (room ? '' : '') + '.';
   }
@@ -644,10 +644,10 @@ async function copyText(text) {
     }
     const d = orderData();
     const href = 'mailto:' + CONFIG.orderEmail +
-      '?subject=' + encodeURIComponent('Box order — ' + d.name + ' — ' + d.pickup) +
+      '?subject=' + encodeURIComponent('Box order for ' + d.name + ', ' + d.pickup) +
       '&body='    + encodeURIComponent(orderText());
     window.location.href = href;
-    say('Opening your email app — send it, then pay the total to hold the box.');
+    say('Opening your email app. Send it, then pay the total to hold the box.');
   });
 
   dmBtn.addEventListener('click', async function () {
@@ -676,7 +676,7 @@ async function copyText(text) {
       say('Ticket copied. Paste it into a DM, then pay the total to hold the box.');
       window.open('https://instagram.com/' + CONFIG.instagram, '_blank', 'noopener');
     } else {
-      say('Couldn’t copy automatically — email works, or screenshot the ticket.', true);
+      say('Couldn’t copy automatically. Email works, or screenshot the ticket.', true);
     }
   });
 
@@ -896,7 +896,7 @@ async function copyText(text) {
 })();
 
 /* =========================================================
-   Reheat tabs — roving tabindex, arrow keys, home/end
+   Reheat tabs: roving tabindex, arrow keys, home/end
    ========================================================= */
 (function tabs() {
   const list = document.querySelector('.tabs[role="tablist"]');

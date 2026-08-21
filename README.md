@@ -1,7 +1,7 @@
-# The Yeast Coast — website
+# The Yeast Coast website
 
 A single-page site for an at-home Hokkaido milk bread business. Plain HTML, CSS
-and JavaScript — no build step, no dependencies, no server.
+and JavaScript. No build step, no dependencies, no server.
 
 ```
 index.html    the main page
@@ -9,7 +9,7 @@ privacy.html  privacy policy
 styles.css    all styling, both pages
 fonts.css     two self-hosted webfaces, inlined as data URIs
 script.js     config, weekly stock, photo slots, order form
-photos/       your photos — see photos/README.md
+photos/       your photos, see photos/README.md
 ```
 
 ## Run it locally
@@ -39,8 +39,8 @@ and in the emailed order, so customers cannot pay until they are real.
 ### 2. Add photos
 
 See `photos/README.md`. Three files, exact names, and they appear automatically.
-Until then the page shows labelled placeholders — it looks deliberate, not
-broken, but photos are the single biggest improvement available to this site.
+Until then the page shows labelled placeholders, which look deliberate rather
+than broken, but photos are the single biggest improvement available to this site.
 
 ### 3. Rewrite the baker's note
 
@@ -61,7 +61,7 @@ thisWeek: {
 }
 ```
 
-That drives the bar under the hero, the meter, and the sold-out treatment —
+That drives the bar under the hero, the meter, and the sold-out treatment:
 sold-out flavors get stamped on the menu and locked in the order form so nobody
 can order one. A mistyped name logs a warning in the browser console rather than
 failing silently.
@@ -98,13 +98,13 @@ details are collected anywhere in the flow.
    the payment note.
 4. You match the payment to the ticket and reply to confirm.
 
-The box isn't held until payment lands — that's stated on the ticket, in the
+The box isn't held until payment lands. That's stated on the ticket, in the
 FAQ, and in the week timeline, so it should not surprise anyone.
 
 Two consequences worth being ready for. An order only reaches you if the
 customer completes the send, so a ticket with no payment against it is a normal
 occurrence, not a lost order. And because you are matching payments by hand,
-the note field is doing real work — chase it if someone leaves it blank.
+the note field is doing real work, so chase it if someone leaves it blank.
 
 The cancellation terms in the FAQ (full refund before the Wednesday cutoff, none
 after, box transferable) are a starting point. Change them to whatever you're
@@ -133,7 +133,7 @@ varies. Confirm what yours asks for.
 
 ### The privacy policy
 
-`privacy.html` describes what this site genuinely does — no cookies, no
+`privacy.html` describes what this site genuinely does: no cookies, no
 analytics, no third-party embeds, self-hosted fonts, and an order form that
 hands off to your own email client rather than posting anywhere. Those claims
 are accurate as written, and they stay accurate only while the site works this
@@ -141,11 +141,11 @@ way. **If you ever add analytics, a hosted form backend, a chat widget, an
 embedded map, or a real checkout, this page becomes wrong and has to be
 updated.**
 
-Three placeholders need filling — search the file for square brackets:
+Three placeholders need filling. Search the file for square brackets:
 
-- `[your city, state]` — where you bake
-- `[your state]` — for the record-keeping sentence
-- `[your host]` — whoever serves the pages, e.g. GitHub Pages or Netlify
+- `[your city, state]`: where you bake
+- `[your state]`: for the record-keeping sentence
+- `[your host]`: whoever serves the pages, e.g. GitHub Pages or Netlify
 
 It is written in plain language rather than legalese, and it is not legal
 advice. If you have any doubt about your state's requirements, or you start
@@ -158,7 +158,7 @@ Building a box writes the choices into the page's query string
 it to someone and have the box come back. Opening such a link restores the box;
 anything that has since sold out is dropped and the customer is told which.
 
-Nothing is stored on the device — no cookies, no localStorage — which is what
+Nothing is stored on the device, with no cookies and no localStorage, which is what
 keeps the privacy page's claims true. If you ever swap this for real storage,
 that page needs updating.
 
@@ -166,7 +166,7 @@ that page needs updating.
 
 - Responsive to 320px with no horizontal scroll.
 - Every text/background pair clears WCAG AA, verified against rendered colors.
-- Honors `prefers-reduced-motion` — reveals, the sticker, card tilts and the
+- Honors `prefers-reduced-motion`: reveals, the sticker, card tilts and the
   scroll-driven bake all switch off.
 - Fonts are Fraunces and Schibsted Grotesk, both SIL Open Font License 1.1,
   inlined so there is no CDN dependency. Regenerate with
