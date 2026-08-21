@@ -269,13 +269,17 @@ section[id] { scroll-margin-top: 84px; }
               margin-left .42s cubic-bezier(.2,.7,.3,1),
               opacity .22s ease, transform .32s ease;
 }
-.nav.is-stuck .brand__name {
-  max-width: 0; margin-left: 0; opacity: 0; transform: translateX(-6px);
-}
-/* Reaching for the mark brings the name back, so it is never a dead end. */
-.nav.is-stuck .brand:hover .brand__name,
-.nav.is-stuck .brand:focus-visible .brand__name {
-  max-width: 16rem; margin-left: .7rem; opacity: 1; transform: none;
+/* Only where the links are on show. Below the nav breakpoint they are behind
+   the toggle, so collapsing the name leaves the island two-thirds empty. */
+@media (min-width: 861px) {
+  .nav.is-stuck .brand__name {
+    max-width: 0; margin-left: 0; opacity: 0; transform: translateX(-6px);
+  }
+  /* Reaching for the mark brings the name back, so it is never a dead end. */
+  .nav.is-stuck .brand:hover .brand__name,
+  .nav.is-stuck .brand:focus-visible .brand__name {
+    max-width: 16rem; margin-left: .7rem; opacity: 1; transform: none;
+  }
 }
 /* The mark takes on a little more presence once it is carrying identity alone. */
 .nav.is-stuck .brand__badge { width: 46px; height: 46px; }
