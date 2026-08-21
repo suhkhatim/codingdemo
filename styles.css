@@ -262,29 +262,35 @@ section[id] { scroll-margin-top: 84px; }
   transition: stroke-dashoffset .12s linear;
 }
 
-/* Collapses away once the island condenses, so the mark stands alone.
-   The <a> carries an aria-label, so the name is still announced. */
+/* Sits beside the mark and centres against it vertically. line-height:1 is what
+   makes that true rather than approximately true: at the inherited line height
+   the extra leading is split around the text, and because "The Yeast Coast" has
+   no descenders its ink then rides above the middle of the box. Measured at 1,
+   the centre of the letterforms lands on the centre of the badge to within half
+   a pixel at every size, so no optical nudge is needed on top. */
 .brand__name {
-  font-family: var(--sans); font-size: .88rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .12em; color: var(--navy-deep);
-  line-height: 1.15; white-space: nowrap;
-  max-width: 16rem; margin-left: .7rem; overflow: hidden;
-  transition: max-width .42s cubic-bezier(.2,.7,.3,1),
-              margin-left .42s cubic-bezier(.2,.7,.3,1),
-              opacity .22s ease, transform .32s ease;
+  /* The size lives in one clamp and the condensed state scales it, rather than
+     each breakpoint restating a size that .nav.is-stuck would then outrank. */
+  --wm: clamp(1.25rem, .55rem + 3.4vw, 2.05rem);
+  margin-left: .7rem;
+  font-family: var(--display); font-size: var(--wm); font-weight: 600;
+  font-variation-settings: 'opsz' 60;
+  text-transform: none; letter-spacing: -.005em; color: var(--navy-deep);
+  line-height: 1; white-space: nowrap;
+  transition: font-size .42s cubic-bezier(.2,.7,.3,1), color .3s ease;
 }
-/* Only where the links are on show. Below the nav breakpoint they are behind
-   the toggle, so collapsing the name leaves the island two-thirds empty. */
-@media (min-width: 861px) {
-  .nav.is-stuck .brand__name {
-    max-width: 0; margin-left: 0; opacity: 0; transform: translateX(-6px);
-  }
-  /* Reaching for the mark brings the name back, so it is never a dead end. */
-  .nav.is-stuck .brand:hover .brand__name,
-  .nav.is-stuck .brand:focus-visible .brand__name {
-    max-width: 16rem; margin-left: .7rem; opacity: 1; transform: none;
-  }
+/* Eases down with the island instead of disappearing: it is the biggest
+   thing in the bar now, and hiding it would undo the point of the size. */
+.nav.is-stuck .brand__name { font-size: calc(var(--wm) * .86); }
+
+/* Just past the mobile breakpoint the links and the CTA come back into the bar
+   while it is still narrow, and the name would run within a few pixels of them.
+   Setting --wm rather than font-size keeps the condensed rule above working off
+   the band value instead of overriding it. */
+@media (min-width: 861px) and (max-width: 1023px) {
+  .brand__name { --wm: 1.7rem; }
 }
+
 /* Shrinks with the island rather than growing into it, so the mark and its
    ring keep the same clearance inside the bar at both sizes. */
 .nav.is-stuck .brand__badge { width: 38px; height: 38px; }
@@ -363,9 +369,7 @@ section[id] { scroll-margin-top: 84px; }
 
   body.nav-open { overflow: hidden; }
 }
-@media (max-width: 420px) {
-  .brand__name { white-space: normal; max-width: 6.5em; font-size: .76rem; letter-spacing: .06em; }
-}
+
 
 /* =========================================================
    PHOTO SLOTS
