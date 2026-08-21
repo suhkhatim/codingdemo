@@ -23,6 +23,12 @@
   --butter-soft: #FBEFCE;
   --butter-deep: #8A6410;
 
+  /* The highlighter stroke behind a marked word. Two passes of the same
+     outline: the butter body, then a darker one shifted down and squashed,
+     which is where the ink gathers at the bottom of a real marker swipe.
+     preserveAspectRatio=none lets it stretch to whatever word it sits behind. */
+  --swipe: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cpath fill='%23F0C24B' d='M5.2,9.8C48,4.6 104,2.9 152,4.4C172,5 188,6.4 196,8.1C199.2,8.8 200,10.9 198.6,13.6L192.4,30.2C191.4,32.7 188.8,34.1 185.4,34.4C138,37.6 74,37.9 26,34.6C16,33.9 9,32.6 5,30.9C1.6,29.4 .6,27.1 1.7,24.4Z'/%3E%3Cpath fill='%23E3A81F' opacity='.38' d='M5.2,9.8C48,4.6 104,2.9 152,4.4C172,5 188,6.4 196,8.1C199.2,8.8 200,10.9 198.6,13.6L192.4,30.2C191.4,32.7 188.8,34.1 185.4,34.4C138,37.6 74,37.9 26,34.6C16,33.9 9,32.6 5,30.9C1.6,29.4 .6,27.1 1.7,24.4Z' transform='translate(0 3)scale(1 .86)'/%3E%3C/svg%3E");
+
   /* Third accent, taken from the ube on the menu, the one colour the product
      itself supplies. It carries what CHANGES week to week; butter carries what
      stays fixed. --ube-light exists for dark grounds, --ube-deep for light. */
@@ -425,11 +431,31 @@ section[id] { scroll-margin-top: 84px; }
 .hero__lede { color: var(--ink-soft); font-size: clamp(1.05rem, 1rem + .35vw, 1.18rem); max-width: 46ch; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
 
+/* A marker swipe, not a selection box.
+
+   The flat band this replaces was a rectangle .30em tall that stopped just
+   short of the baseline, so it cut across the middle of the word with four
+   square corners and read as a UI selection rather than something drawn on
+   the page. This is one pass of a chisel-tip marker instead: uneven edges, a
+   slight tilt, and a second darker pass along the bottom where the ink pools.
+
+   The placement is measured off the font rather than guessed. Fraunces puts
+   the baseline .98em below the top of the inline box, and for "soft" the
+   ascenders reach .73em above it with an x-height of .47em. Starting at .35em
+   and running .72em therefore lays the stroke from just under the tops of the
+   f and t to about .09em past the baseline, which is how a real highlighter
+   sits on a word. It also over-runs the word by 3% on each side, because
+   nobody stops a marker exactly on the letter. */
 .mark {
-  background: linear-gradient(var(--butter), var(--butter)) no-repeat;
-  background-size: 100% .30em; background-position: 0 .64em;
-  padding-inline: .05em;
+  padding-inline: .1em;
+  background: var(--swipe) no-repeat -3% .35em / 106% .72em;
+  transition: background-size .75s cubic-bezier(.2,.7,.3,1) .2s;
 }
+/* Drawn in when the headline reveals. Stated as the collapsed state on the
+   un-revealed element rather than as the grown state on the revealed one, so
+   the swipe is present by default and only ever hidden by a reveal that has
+   not fired yet. */
+.reveal:not(.is-in) .mark { background-size: 0 .72em; }
 
 /* the pan placeholder */
 .pan { width: min(80%, 400px); }
@@ -832,6 +858,9 @@ select {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
   .reveal { opacity: 1; transform: none; }
+  /* The swipe is content, not decoration, so it stays drawn even when the
+     reveal that would have drawn it never runs. */
+  .reveal:not(.is-in) .mark { background-size: 106% .72em; }
   .sticker { animation: none; }
   .flavor:hover, .flavor:nth-child(even):hover, .box-card--featured, .box-card--featured:hover { transform: none; rotate: 0deg; }
 }
