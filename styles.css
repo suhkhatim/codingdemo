@@ -968,59 +968,119 @@ select {
 .tray-legend b { font-variant-numeric: tabular-nums; color: var(--navy-deep); }
 .tray__status { margin-top: .6rem; font-size: .84rem; color: var(--ink-faint); }
 
-/* ---- crumb wipe ---- */
-.wipe__stage {
-  position: relative; overflow: hidden; border-radius: var(--r-lg);
-  border: 1px solid var(--line); box-shadow: var(--shadow-md);
-  aspect-ratio: 16 / 9; background: #DCC8A6; touch-action: pan-y;
+/* ---- the tangzhong dial ---- */
+.tz {
+  border: 1px solid var(--line); border-radius: var(--r-lg);
+  background: var(--paper); box-shadow: var(--shadow-md);
+  padding: clamp(1.1rem, 3vw, 1.9rem);
 }
-.wipe__art { position: absolute; inset: 0; width: 100%; height: 100%; }
-.wipe__art--plain { background: #DCC8A6; }
-.wipe__art--plain ellipse { fill: #F0E7D6; }
-.wipe__art--tang  { background: #E8CFA4; clip-path: inset(0 0 0 var(--wipe)); }
-.wipe__art--tang ellipse { fill: #FBF3E4; }
 
-.wipe__tag {
-  position: absolute; top: .8rem; z-index: 2;
-  font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  padding: .3rem .7rem; border-radius: var(--r-pill);
-  background: var(--navy-deep); color: #fff;
+.tz__labelrow { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.tz__label {
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-faint);
 }
-.wipe__tag--l { left: .8rem; }
-.wipe__tag--r { right: .8rem; background: var(--butter); color: var(--navy-deep); }
+.tz__value {
+  font-family: var(--display); font-size: 1.7rem; font-weight: 600;
+  color: var(--navy-deep); font-variant-numeric: tabular-nums; line-height: 1;
+}
 
-.wipe__handle {
-  position: absolute; top: 0; bottom: 0; left: var(--wipe);
-  width: 3px; margin-left: -1.5px; background: var(--navy-deep); z-index: 3; pointer-events: none;
+/* The track carries two marks the reader can aim at: the band where the result
+   is within a tenth of the best, and the peak itself. Both are positioned from
+   the model in script.js rather than written down here, so they cannot drift
+   out of step with the curve they describe. */
+/* The margin is clearance, not decoration: the peak marker hangs a label above
+   the track and the focus ring sits 4px outside it, and both had something to
+   collide with before this. */
+.tz__track { position: relative; margin-top: 1.25rem; height: 2.5rem; --fill: 0%; }
+.tz__track::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 8px;
+  transform: translateY(-50%); border-radius: var(--r-pill);
+  background: linear-gradient(to right, var(--butter) var(--fill), rgba(14,42,99,.12) var(--fill));
 }
-.wipe__handle span {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 2.6rem; height: 2.6rem; border-radius: 50%;
+.tz__window {
+  position: absolute; top: 50%; height: 18px; transform: translateY(-50%);
+  border-radius: 4px; background: rgba(110,76,158,.16);
+  border-inline: 2px solid var(--ube-light);
+}
+.tz__peak {
+  position: absolute; top: 50%; width: 2px; height: 26px; margin-left: -1px;
+  transform: translateY(-50%); background: var(--ube); border-radius: 2px;
+}
+.tz__peak::after {
+  content: "best"; position: absolute; top: -1.05rem; left: 50%; transform: translateX(-50%);
+  font-size: .6rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--ube-deep);
+}
+.tz__track input[type="range"] {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  margin: 0; appearance: none; background: transparent; cursor: ew-resize;
+}
+.tz__track input[type="range"]::-webkit-slider-thumb {
+  appearance: none; width: 2.1rem; height: 2.1rem; border-radius: 50%;
   background: var(--butter); border: 2.5px solid var(--navy-deep);
-  box-shadow: 0 3px 0 rgba(14,42,99,.3);
+  box-shadow: 0 3px 0 rgba(14,42,99,.3); cursor: grab;
 }
-.wipe__handle span::before, .wipe__handle span::after {
-  content: ""; position: absolute; top: 50%; width: 0; height: 0;
-  border-block: 5px solid transparent;
+.tz__track input[type="range"]::-moz-range-thumb {
+  width: 2.1rem; height: 2.1rem; border-radius: 50%; border: 2.5px solid var(--navy-deep);
+  background: var(--butter); box-shadow: 0 3px 0 rgba(14,42,99,.3); cursor: grab;
 }
-.wipe__handle span::before { left: .5rem; transform: translateY(-50%); border-right: 7px solid var(--navy-deep); }
-.wipe__handle span::after  { right: .5rem; transform: translateY(-50%); border-left: 7px solid var(--navy-deep); }
+.tz__track input[type="range"]:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; border-radius: var(--r-pill); }
 
-/* A real range input, stretched over the stage: pointer drag and arrow keys
-   both work, and it is announced properly, without a custom drag handler. */
-.wipe__range {
-  position: absolute; inset: 0; z-index: 4;
-  width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize;
-  appearance: none; background: transparent;
+.tz__ends {
+  margin-top: .55rem;
+  display: flex; justify-content: space-between; gap: 1rem;
+  font-size: .72rem; color: var(--ink-faint);
 }
-.wipe__range::-webkit-slider-thumb { appearance: none; width: 3rem; height: 100%; }
-.wipe__range::-moz-range-thumb { width: 3rem; height: 100%; border: 0; opacity: 0; }
-.wipe__range:focus-visible { opacity: 1; outline: 3px solid var(--navy); outline-offset: 3px; }
 
-.wipe__captions { display: grid; gap: 1.4rem; margin-top: 1.4rem; }
-@media (min-width: 760px) { .wipe__captions { grid-template-columns: 1fr 1fr; gap: 2rem; } }
-.wipe__captions h3 { font-size: 1.2rem; color: var(--navy-deep); margin-bottom: .45rem; }
-.wipe__captions p { font-size: .94rem; color: var(--ink-soft); }
+.tz__grid { display: grid; gap: clamp(1.1rem, 3vw, 1.8rem); margin-top: 1.4rem; }
+@media (min-width: 820px) { .tz__grid { grid-template-columns: 1.25fr 1fr; align-items: start; } }
+
+.tz__crumbwrap { margin: 0; }
+.tz__crumbwrap svg {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--r-md); background: var(--sand);
+}
+.tz__cap { margin-top: .55rem; font-size: .78rem; color: var(--ink-faint); }
+
+.tz__stats { display: grid; gap: .85rem; }
+.tz__stats li { display: grid; grid-template-columns: 1fr auto; gap: .1rem .8rem; }
+.tz__statname { font-size: .8rem; color: var(--ink-soft); align-self: center; }
+.tz__statval {
+  font-family: var(--display); font-size: 1.15rem; color: var(--navy-deep);
+  font-variant-numeric: tabular-nums;
+}
+.tz__bar {
+  grid-column: 1 / -1; height: 6px; border-radius: var(--r-pill);
+  background: rgba(14,42,99,.10); overflow: hidden;
+}
+.tz__bar i {
+  display: block; height: 100%; width: 0; border-radius: inherit;
+  background: var(--butter-deep); transition: width .25s ease, background .25s ease;
+}
+.tz__bar i.is-poor { background: #B4472F; }
+
+.tz__recipe {
+  margin-top: 1.2rem; padding-top: 1rem; border-top: 2px dashed var(--line);
+}
+.tz__recipehead {
+  font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-faint); margin-bottom: .5rem;
+}
+.tz__recipe dl { display: grid; gap: .35rem; }
+.tz__recipe div { display: flex; gap: .6rem; align-items: baseline; justify-content: space-between; }
+.tz__recipe dt { font-size: .8rem; color: var(--ink-soft); }
+.tz__recipe dd {
+  margin: 0; font-size: .84rem; font-weight: 700; color: var(--navy-deep);
+  text-align: right; font-variant-numeric: tabular-nums;
+}
+.tz__note { margin-top: .6rem; font-size: .74rem; color: var(--ink-faint); }
+
+.tz__verdict {
+  margin-top: 1.3rem; padding-top: 1rem; border-top: 1px solid var(--line);
+  font-family: var(--display); font-size: clamp(1rem, .9rem + .4vw, 1.2rem);
+  color: var(--navy-deep); max-width: 62ch;
+}
 
 /* ---- week status ---- */
 .week__status {

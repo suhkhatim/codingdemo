@@ -312,16 +312,200 @@ async function copyText(text) {
 })();
 
 /* =========================================================
-   Crumb wipe: a real range input stretched over the stage, so pointer
-   drag, arrow keys and screen readers all work without a drag handler.
+   The tangzhong dial
+
+   One input, everything else derived. The number a baker actually chooses is
+   what share of the flour goes into the cooked starter, so that is the only
+   control, and the figures, the recipe and the drawing all fall out of it.
+
+   The curve deliberately has an interior peak. Cooking flour into the milk
+   gelatinises its starch, which lets the dough carry water it otherwise could
+   not, and that water is what keeps the crumb soft on day two. But gelatinised
+   starch carries no gluten, so past roughly 5.5% of the flour there is more
+   soft starch than structure to hold it, and the loaf stops rising and sinks
+   with a gummy layer along the bottom. Both effects are in the model, which is
+   why dragging to the end makes things worse rather than better.
    ========================================================= */
-(function crumbWipe() {
-  const range = document.getElementById('wipeRange');
-  const stage = document.getElementById('wipeStage');
-  if (!range || !stage) return;
-  const sync = function () { stage.style.setProperty('--wipe', range.value + '%'); };
-  range.addEventListener('input', sync);
-  sync();
+function tangzhong(t) {
+  const ease = function (k) { return 1 - Math.exp(-t / k); };
+  const over = Math.max(0, t - 5.5);
+  const rise = Math.max(0, 100 - 2.6 * over * over);
+  const open = 100 * ease(3.6);
+  const day2 = 30 + 62 * ease(4.2);
+  return {
+    t: t,
+    hydration: 62 + 20 * ease(4.2),
+    open: open,
+    day2: day2,
+    rise: rise,
+    // What you would actually rather eat, which is what the peak marks.
+    result: (rise / 100) * (0.4 * open + 0.6 * day2)
+  };
+}
+
+(function tzDial() {
+  const range = document.getElementById("tzRange");
+  const svg   = document.getElementById("tzCrumb");
+  if (!range || !svg) return;
+
+  const el = function (id) { return document.getElementById(id); };
+  const out = {
+    value: el("tzValue"), hyd: el("tzHyd"), day2: el("tzDay2"), rise: el("tzRise"),
+    hydBar: el("tzHydBar"), day2Bar: el("tzDay2Bar"), riseBar: el("tzRiseBar"),
+    starter: el("tzStarter"), rest: el("tzRest"), verdict: el("tzVerdict"),
+    cap: el("tzCrumbCap"), window: el("tzWindow"), peak: el("tzPeak")
+  };
+
+  const MIN = parseFloat(range.min), MAX = parseFloat(range.max);
+  const pct = function (t) { return ((t - MIN) / (MAX - MIN)) * 100; };
+
+  // Found by sampling rather than written down, so the marker cannot drift out
+  // of step with the model if the constants above are ever tuned.
+  let best = { t: MIN, result: -1 };
+  for (let t = MIN; t <= MAX; t += 0.1) {
+    const r = tangzhong(t);
+    if (r.result > best.result) best = r;
+  }
+  const bestT = Math.round(best.t * 2) / 2;
+  if (out.peak) out.peak.style.left = pct(bestT) + "%";
+  // The usable window: anywhere the result is within a tenth of the best.
+  let lo = bestT, hi = bestT;
+  for (let t = MIN; t <= MAX; t += 0.1) {
+    if (tangzhong(t).result >= best.result * 0.9) { lo = Math.min(lo, t); hi = Math.max(hi, t); }
+  }
+  if (out.window) {
+    out.window.style.left  = pct(lo) + "%";
+    out.window.style.width = (pct(hi) - pct(lo)) + "%";
+  }
+
+  /* ---- the slice ----
+     The cells are laid out once from a fixed seed and then only resized, so
+     dragging morphs one crumb rather than reshuffling into a different one
+     every frame. That is the whole reason it reads as cause and effect. */
+  const W = 320, H = 210, NS = "http://www.w3.org/2000/svg";
+  let seed = 20260824;
+  const rnd = function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let x = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+  };
+  const cells = [];
+  for (let gy = 0; gy < 13; gy++) {
+    for (let gx = 0; gx < 19; gx++) {
+      cells.push({
+        x: 14 + gx * 16.2 + (rnd() - 0.5) * 13,
+        y: 24 + gy * 13.4 + (rnd() - 0.5) * 11,
+        s: 0.62 + rnd() * 0.78,
+        a: 0.82 + rnd() * 0.42,
+        rot: rnd() * 180
+      });
+    }
+  }
+
+  const clipId = "tzSlice";
+  svg.innerHTML =
+    "<defs><clipPath id=\"" + clipId + "\"><path id=\"tzSlicePath\"/></clipPath></defs>" +
+    "<path id=\"tzCrust\" fill=\"#C98B3F\"/>" +
+    "<path id=\"tzBody\" fill=\"#E9D3A8\"/>" +
+    "<g clip-path=\"url(#" + clipId + ")\" id=\"tzCells\"></g>";
+  const slicePath = svg.querySelector("#tzSlicePath");
+  const crust = svg.querySelector("#tzCrust");
+  const body  = svg.querySelector("#tzBody");
+  const group = svg.querySelector("#tzCells");
+  cells.forEach(function () {
+    group.appendChild(document.createElementNS(NS, "ellipse"));
+  });
+  const nodes = group.childNodes;
+
+  // Top edge domes when the loaf holds, flattens, then dips as it collapses.
+  const outline = function (gum) {
+    const crown = 26 * (1 - gum * 1.75);
+    const top = 34;
+    return "M10," + (H - 8) + " L10," + top +
+           " Q160," + (top - crown * 2) + " 310," + top +
+           " L310," + (H - 8) + " Z";
+  };
+
+  function draw(m) {
+    const gum = 1 - m.rise / 100;
+    const d = outline(gum);
+    slicePath.setAttribute("d", d);
+    body.setAttribute("d", d);
+    crust.setAttribute("d", d);
+    crust.setAttribute("transform", "translate(0,-5)");
+
+    const grow = 1.7 + (m.open / 100) * 6.2;
+    for (let i = 0; i < cells.length; i++) {
+      const c = cells[i], n = nodes[i];
+      // A sunken loaf goes dense along the bottom before anything else, so the
+      // gummy band eats the cells from the base upwards.
+      const depth = c.y / H;
+      const band = Math.max(0, Math.min(1, (depth - (1 - 0.5 * gum)) / 0.5));
+      const r = c.s * grow * (1 - 0.88 * band);
+      const sink = gum * 30 * Math.max(0, 1 - depth * 1.4) *
+                   (1 - Math.abs(c.x - 160) / 190);
+      n.setAttribute("cx", c.x.toFixed(1));
+      n.setAttribute("cy", (c.y + sink).toFixed(1));
+      n.setAttribute("rx", Math.max(0, r).toFixed(2));
+      n.setAttribute("ry", Math.max(0, r * c.a * (1 + band * 0.6)).toFixed(2));
+      n.setAttribute("transform", "rotate(" + c.rot.toFixed(0) + " " + c.x.toFixed(1) + " " + (c.y + sink).toFixed(1) + ")");
+      n.setAttribute("fill", "#FDF8ED");
+      n.setAttribute("opacity", (0.55 + 0.45 * (1 - band)).toFixed(2));
+    }
+  }
+
+  const VERDICTS = [
+    [0.5,  "Tight, close crumb, and dry by tomorrow. This is bread, but it is not milk bread."],
+    [3,    "Softer, and it keeps a little longer. Still holding back a lot of water it could carry."],
+    [4.5,  "Close. The crumb is opening and it will still be good in the morning."],
+    [7.5,  "This is the window. Enough cooked starch to hold the water, enough gluten to lift it."],
+    [9.5,  "Past the peak. The rise is going, and the crumb is starting to go tacky near the base."],
+    [99,   "Too far. There is more cooked starch than gluten to carry it, so it sinks in the middle and leaves a gummy line along the bottom."]
+  ];
+  const verdictFor = function (t) {
+    for (let i = 0; i < VERDICTS.length; i++) if (t < VERDICTS[i][0]) return VERDICTS[i][1];
+    return VERDICTS[VERDICTS.length - 1][1];
+  };
+
+  const g = function (n) { return Math.round(n) + "g"; };
+
+  function update() {
+    const t = parseFloat(range.value);
+    const m = tangzhong(t);
+
+    out.value.textContent = t + "%";
+    out.hyd.textContent   = Math.round(m.hydration) + "%";
+    out.day2.textContent  = Math.round(m.day2) + "%";
+    out.rise.textContent  = Math.round(m.rise) + "%";
+    out.hydBar.style.width  = ((m.hydration - 55) / 30 * 100) + "%";
+    out.day2Bar.style.width = m.day2 + "%";
+    out.riseBar.style.width = m.rise + "%";
+    out.riseBar.classList.toggle("is-poor", m.rise < 70);
+
+    const flour = 500, starterFlour = flour * t / 100;
+    const liquid = flour * m.hydration / 100, starterMilk = starterFlour * 5;
+    out.starter.textContent = t === 0
+      ? "nothing to cook"
+      : g(starterFlour) + " flour + " + g(starterMilk) + " milk";
+    out.rest.textContent = g(flour - starterFlour) + " flour, " + g(liquid - starterMilk) + " milk";
+
+    out.verdict.textContent = verdictFor(t);
+    out.cap.textContent = t === 0
+      ? "Straight dough, no cooked starter."
+      : t + "% of the flour cooked first, at " + Math.round(m.hydration) + "% hydration.";
+    // Announced instead of the bare number, which on its own says nothing.
+    range.setAttribute("aria-valuetext",
+      t + "% of the flour cooked into the starter. " + Math.round(m.hydration) +
+      "% hydration, " + Math.round(m.day2) + "% still soft on day two, " +
+      Math.round(m.rise) + "% of the rise held.");
+    range.parentElement.style.setProperty("--fill", pct(t) + "%");
+
+    draw(m);
+  }
+
+  range.addEventListener("input", update);
+  update();
 })();
 
 /* =========================================================
