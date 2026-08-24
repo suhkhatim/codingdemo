@@ -390,8 +390,8 @@
       <h2>Build your box</h2>
       <p class="section__lede">
         Nothing is charged on this page. It writes up a ticket to send over, then
-        you pay by Cash App or Zelle to hold the box. Boxes are made to the paid
-        list, so payment is what reserves it.
+        you pay by Cash App, Zelle or Apple Cash to hold the box. Boxes are made
+        to the paid list, so payment is what reserves it.
       </p>
     </div>
 
@@ -513,10 +513,9 @@
           </div>
           <div class="ticket__pay">
             <p class="ticket__payhead">Send <span id="payAmount">$12</span> to confirm</p>
-            <ul class="ticket__methods">
-              <li><span>Cash App</span><button type="button" class="copyable" data-pay="cashapp" data-copy>…</button></li>
-              <li><span>Zelle</span><button type="button" class="copyable" data-pay="zelle" data-copy>…</button></li>
-            </ul>
+            <!-- Rendered from CONFIG.payment in script.js. Add a way to pay
+                 there and it appears here and in the order email together. -->
+            <ul class="ticket__methods" id="payMethods"></ul>
             <button type="button" class="ticket__share" id="shareBtn">Copy a link to this box</button>
             <p class="ticket__fine">Put your name and pickup date in the payment note. Boxes are held once payment lands, not before. The ticket is confirmed by reply.</p>
           </div>
@@ -541,7 +540,7 @@
       </div>
       <div class="qa-item">
         <dt>How do I pay?</dt>
-        <dd>Cash App or Zelle, up front. The handles are on your ticket once you've built a box. Put your name and pickup date in the payment note so it can be matched to your order. Nothing is charged on this website and no card details are ever collected.</dd>
+        <dd>Cash App, Zelle or Apple Cash, up front. Apple Cash is sent from Messages, the other two from their own apps. The handles are all on your ticket once you've built a box. Put your name and pickup date in the payment note so it can be matched to your order. Nothing is charged on this website and no card details are ever collected.</dd>
       </div>
       <div class="qa-item">
         <dt>Why pay in advance?</dt>

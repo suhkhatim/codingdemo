@@ -18,10 +18,33 @@ const CONFIG = {
   cutoffDay:     'Wednesday',
 
   // Boxes are paid up front. Nothing is held until payment lands.
-  payment: {
-    cashApp: '$TheYeastCoast',         // your $cashtag
-    zelle:   'hello@example.com'       // the phone or email your Zelle is registered to
-  },
+  //
+  // Apple Pay and Google Pay are not handles. There is nothing to print on a
+  // ticket the way a $cashtag or a Zelle address prints, because both are
+  // wallet buttons that only appear inside a real checkout run by a payment
+  // processor. Google's person-to-person transfers in the US closed in 2024,
+  // so there is no Google equivalent of a Zelle address at all.
+  //
+  // That leaves two honest ways in, and both are below. Apple Cash is Apple's
+  // person-to-person product and behaves exactly like the two above it: a
+  // phone number, paid inside Messages, no fees and no account to open. The
+  // payment link is a checkout page hosted by a processor (Square, Stripe and
+  // PayPal all hand you one), and its page is what puts real Apple Pay and
+  // Google Pay buttons in front of a customer. It costs roughly 2.9% + 30c a
+  // box and needs an account with that processor, which is why it ships off:
+  // paste a real link in and flip `on` to true. A pay button that goes nowhere
+  // is worse than no pay button.
+  //
+  // Order matters, the ticket and the order email both read this list, and
+  // anything switched off or left blank is skipped by both.
+  payment: [
+    { id: 'cashapp',   label: 'Cash App',   value: '$TheYeastCoast',    on: true },
+    { id: 'zelle',     label: 'Zelle',      value: 'hello@example.com', on: true },
+    { id: 'applecash', label: 'Apple Cash', value: '(555) 000-0000',    on: true,
+      note: 'Send it in Messages' },
+    { id: 'link',      label: 'Card, Apple Pay or Google Pay', kind: 'link',
+      value: '', cta: 'Open checkout', on: false }
+  ],
 
   // ---- update these every week ----
   thisWeek: {
@@ -51,6 +74,13 @@ const FLAVOR_COLOR = {
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* The payment methods a customer can actually use: switched on, and with
+   something to show. The ticket and the order email both read this, so the two
+   can never end up disagreeing about how someone is meant to pay. */
+function payMethods() {
+  return CONFIG.payment.filter(function (m) { return m.on && m.value; });
+}
+
 /* =========================================================
    Branding
    ========================================================= */
@@ -71,10 +101,45 @@ const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     el.textContent = '@' + CONFIG.instagram;
   });
 
-  const cash = document.querySelector('[data-pay="cashapp"]');
-  if (cash) cash.textContent = CONFIG.payment.cashApp;
-  const zelle = document.querySelector('[data-pay="zelle"]');
-  if (zelle) zelle.textContent = CONFIG.payment.zelle;
+  // The ticket's method rows are built from the config rather than written
+  // into the markup, so adding a way to pay is one line in CONFIG.payment and
+  // nothing else. A handle renders as a copyable value; a checkout link
+  // renders as a link out, because you cannot copy your way to Apple Pay.
+  const payList = document.getElementById('payMethods');
+  if (payList) {
+    payList.innerHTML = '';
+    payMethods().forEach(function (m) {
+      const li = document.createElement('li');
+      const label = document.createElement('span');
+      label.textContent = m.label;
+      if (m.note) {
+        const hint = document.createElement('em');
+        hint.textContent = m.note;
+        label.appendChild(hint);
+      }
+      li.appendChild(label);
+
+      if (m.kind === 'link') {
+        const a = document.createElement('a');
+        a.className = 'ticket__paylink';
+        a.href = m.value;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = m.cta || 'Pay online';
+        li.appendChild(a);
+      } else {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'copyable';
+        btn.setAttribute('data-copy', '');
+        btn.setAttribute('data-pay', m.id);
+        btn.setAttribute('aria-label', 'Copy ' + m.label + ' handle');
+        btn.textContent = m.value;
+        li.appendChild(btn);
+      }
+      payList.appendChild(li);
+    });
+  }
 
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
@@ -233,13 +298,16 @@ async function copyText(text) {
   }
 }
 
+/* Delegated rather than bound to each button at load, because the payment rows
+   are rendered from the config and would otherwise have to exist before this
+   module ran to be clickable at all. */
 (function copyables() {
-  document.querySelectorAll('[data-copy]').forEach(function (btn) {
-    btn.addEventListener('click', async function () {
-      if (!(await copyText(btn.textContent.replace(/\s*copied$/, '').trim()))) return;
-      btn.classList.add('is-copied');
-      setTimeout(function () { btn.classList.remove('is-copied'); }, 1600);
-    });
+  document.addEventListener('click', async function (event) {
+    const btn = event.target.closest('[data-copy]');
+    if (!btn) return;
+    if (!(await copyText(btn.textContent.replace(/\s*copied$/, '').trim()))) return;
+    btn.classList.add('is-copied');
+    setTimeout(function () { btn.classList.remove('is-copied'); }, 1600);
   });
 })();
 
@@ -613,13 +681,15 @@ async function copyText(text) {
     ];
     if (d.phone) lines.push('Phone: ' + d.phone);
     if (d.notes) lines.push('', 'Notes: ' + d.notes);
-    lines.push(
-      '',
-      '--- To confirm this box, send $' + (d.price * d.qty) + ' ---',
-      'Cash App: ' + CONFIG.payment.cashApp,
-      'Zelle:    ' + CONFIG.payment.zelle,
-      'Put your name and pickup date in the payment note.'
-    );
+    lines.push('', '--- To confirm this box, send $' + (d.price * d.qty) + ' ---');
+    // Padded off the longest label rather than a fixed width, so the column
+    // stays straight whatever methods are switched on.
+    const methods = payMethods();
+    const width = methods.reduce(function (n, m) { return Math.max(n, m.label.length); }, 0);
+    methods.forEach(function (m) {
+      lines.push(m.label + ':' + ' '.repeat(width - m.label.length + 1) + m.value);
+    });
+    lines.push('Put your name and pickup date in the payment note.');
     return lines.join('\n');
   }
 

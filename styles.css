@@ -781,6 +781,24 @@ select {
 .ticket__methods li { display: flex; justify-content: space-between; align-items: baseline; gap: .6rem; }
 .ticket__methods span { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); }
 .ticket__methods strong { font-size: .82rem; color: var(--navy-deep); word-break: break-all; text-align: right; }
+/* A method that needs a word of explanation carries it under its own label
+   rather than in the fine print, where nobody reads it at the moment they are
+   looking for where to send the money. */
+.ticket__methods em {
+  display: block; margin-top: .15rem;
+  font-style: normal; font-size: .64rem; letter-spacing: .02em;
+  text-transform: none; color: var(--ink-faint); opacity: .85;
+}
+/* A checkout link is a different act from copying a handle, so it does not
+   borrow the copyable's dashed underline. */
+.ticket__paylink {
+  flex: none; font-size: .78rem; font-weight: 700; text-decoration: none;
+  color: var(--navy-deep); background: var(--butter);
+  padding: .28rem .7rem; border-radius: var(--r-pill);
+  border: 1.5px solid var(--navy-deep);
+  transition: background .15s ease, transform .15s ease;
+}
+.ticket__paylink:hover { background: var(--butter-soft); transform: translateY(-1px); }
 
 /* =========================================================
    DOCUMENT PAGES (privacy)

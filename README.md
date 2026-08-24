@@ -27,14 +27,44 @@ At the top of `script.js`:
 ```js
 orderEmail: 'hello@example.com',      // where order emails land
 instagram:  'theyeastcoast',
-payment: {
-  cashApp: '$TheYeastCoast',          // your $cashtag
-  zelle:   'hello@example.com'        // the phone or email your Zelle uses
-},
+payment: [
+  { id: 'cashapp',   label: 'Cash App',   value: '$TheYeastCoast',    on: true },
+  { id: 'zelle',     label: 'Zelle',      value: 'hello@example.com', on: true },
+  { id: 'applecash', label: 'Apple Cash', value: '(555) 000-0000',    on: true,
+    note: 'Send it in Messages' },
+  { id: 'link',      label: 'Card, Apple Pay or Google Pay', kind: 'link',
+    value: '', cta: 'Open checkout', on: false }
+],
 ```
 
-All four are placeholders. The Cash App and Zelle handles print on the ticket
-and in the emailed order, so customers cannot pay until they are real.
+Every value there is a placeholder. The handles print on the ticket and in the
+emailed order, so customers cannot pay until they are real.
+
+The list is read by both the ticket and the order email, in the order written,
+and anything with `on: false` or an empty `value` is skipped by both. So adding
+or dropping a way to pay is one line here and nothing else.
+
+### Apple Pay and Google Pay
+
+Neither is a handle. There is nothing to print on a ticket the way a `$cashtag`
+prints, because both are wallet buttons that only appear inside a checkout run
+by a payment processor. Google's person-to-person transfers in the US closed in
+2024, so there is no Google equivalent of a Zelle address at all.
+
+Two things do work, and both are in the list above:
+
+- **Apple Cash** is Apple's person-to-person product and behaves like the other
+  two: a phone number, paid inside Messages, no fees and no account to open. It
+  is on. Put your real number in. It is iPhone only, and the sender needs Apple
+  Cash set up, so it is an addition to Cash App and Zelle rather than a
+  replacement for them.
+- **A payment link** is a checkout page hosted by a processor. Square, Stripe
+  and PayPal all hand you a URL for one, and that page is what puts real Apple
+  Pay and Google Pay buttons in front of a customer, along with cards. Paste the
+  URL into `value` and set `on: true`. It costs roughly 2.9% + 30c per box and
+  needs an account with that processor, which is why it ships switched off. Note
+  that it also changes what the privacy policy should say, since a processor
+  then sees the transaction.
 
 ### 2. Add photos
 
