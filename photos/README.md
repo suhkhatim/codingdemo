@@ -7,7 +7,6 @@ placeholder in its place, so nothing looks broken while you're still shooting.
 | Filename            | Where it appears        | Shape        | What to shoot |
 |---------------------|-------------------------|--------------|---------------|
 | `hero-box.jpg`      | Hero, top of the page   | square (1:1) | An open box from directly above, in daylight |
-| `baker.jpg`         | "Who bakes it"          | portrait 4:5 | You, in the kitchen, flour on hands is fine |
 | `classic-milk.jpg`  | Feature flavor tile     | landscape 4:3| One bite torn in half, close, showing the shred |
 
 ## Shooting notes

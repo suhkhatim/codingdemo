@@ -38,7 +38,7 @@ and in the emailed order, so customers cannot pay until they are real.
 
 ### 2. Add photos
 
-See `photos/README.md`. Three files, exact names, and they appear automatically.
+See `photos/README.md`. Two files, exact names, and they appear automatically.
 Until then the page shows labelled placeholders, which look deliberate rather
 than broken, but photos are the single biggest improvement available to this site.
 
@@ -46,8 +46,8 @@ than broken, but photos are the single biggest improvement available to this sit
 
 The "Who bakes it" section in `index.html` is placeholder copy in a generic
 voice, marked with a comment. It is the most valuable text on the page and the
-only part a competitor can't copy. Two paragraphs in your own words, and sign it
-with your actual name.
+only part a competitor can't copy. Two paragraphs in your own words. It is
+already signed Sunny.
 
 ## Updating it each week
 
