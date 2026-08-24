@@ -305,11 +305,31 @@ section[id] { scroll-margin-top: 84px; }
 /* ---- links with a sliding indicator ---- */
 .nav__menu { display: flex; align-items: center; gap: clamp(.6rem, 1.6vw, 1.2rem); }
 .nav__links { position: relative; display: flex; align-items: center; gap: .15rem; }
+/* Set in full caps, which is a change of size and spacing and not only of case.
+   Caps read larger and lock together, so the size comes down from .9rem, the
+   weight goes up to hold colour at that size, and the tracking opens up:
+   without it, capitals set at text spacing read as a solid block.
+   Uppercase in CSS rather than in the markup, deliberately, and the opposite
+   choice from the page names themselves. This is styling, not naming, and
+   literal capitals in the HTML would have screen readers spelling FAQ style
+   names out letter by letter and would put shouting into copied text. */
 .nav__links a {
   position: relative; z-index: 1;
-  padding: .48rem .8rem; border-radius: var(--r-pill);
-  font-size: .9rem; font-weight: 600; color: var(--ink-soft);
+  padding: .48rem .7rem; border-radius: var(--r-pill);
+  font-size: .77rem; font-weight: 700; color: var(--ink-soft);
+  text-transform: uppercase; letter-spacing: .12em;
+  /* Caps plus tracking are wide enough that flex was breaking THE BAKER over
+     two lines in the narrow band above the mobile breakpoint. */
+  white-space: nowrap;
   transition: color .22s ease;
+}
+.nav__cta { text-transform: uppercase; letter-spacing: .1em; font-size: .77rem; white-space: nowrap; }
+
+/* Same narrow band the wordmark steps down in. It has to sit after the rule
+   above rather than beside the wordmark's, because it carries no extra
+   specificity and would otherwise lose to it on source order. */
+@media (min-width: 861px) and (max-width: 1023px) {
+  .nav__links a { font-size: .72rem; letter-spacing: .09em; padding-inline: .52rem; }
 }
 .nav__links a:hover, .nav__links a.is-current { color: var(--navy-deep); }
 
@@ -352,8 +372,11 @@ section[id] { scroll-margin-top: 84px; }
   .nav__links { flex-direction: column; align-items: flex-start; gap: 0; width: 100%; }
   .nav__pill { display: none; }
   .nav__links a {
-    font-family: var(--display); font-size: clamp(2rem, 9vw, 2.9rem);
-    font-weight: 600; text-transform: none; letter-spacing: -.02em;
+    font-family: var(--display); font-size: clamp(1.85rem, 8.2vw, 2.7rem);
+    /* Caps in the panel too, so the menu reads the same on a phone as in the
+       bar. The tracking flips from negative to positive: the tight fit that
+       suits large mixed-case display type jams capitals together. */
+    font-weight: 600; text-transform: uppercase; letter-spacing: .02em;
     color: var(--on-dark); padding: .35rem 0; border-radius: 0;
     opacity: 0; transform: translateY(14px);
     transition: opacity .4s ease, transform .4s cubic-bezier(.2,.7,.3,1), color .2s;
