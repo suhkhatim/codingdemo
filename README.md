@@ -105,7 +105,7 @@ summaries but not its detail panels.
 - Mobile: the spine collapses to a bar and the index drops out of it as a sheet
 - Disciplines expand in place, and **several can stay open at once** — it's an
   index to read across, not a set of tabs
-- Enquiry form validates per-field with inline errors
+- Inquiry form validates per-field with inline errors
 
 `prefers-reduced-motion: reduce` disables the draw-in and all transitions.
 There's a print stylesheet that drops the spine and opens every panel.
@@ -122,7 +122,7 @@ Copy is written to be industry-accurate but the specifics are invented. Search
 for `PLACEHOLDER` and swap in:
 
 - **Contact details** — `hello@s2peopleadvisory.com`, `+44 20 0000 0000` and the
-  London address appear in the spine, the Enquiry particulars and the JSON-LD in
+  London address appear in the spine, the Inquiry particulars and the JSON-LD in
   `<head>`
 - **Client accounts** — all four are fictional, each tagged `[Client Name]`. Get
   written approval before publishing real quotes
@@ -133,7 +133,7 @@ for `PLACEHOLDER` and swap in:
 - **Legal pages** — privacy, cookies and terms all point at `#`
 - **Canonical URL and OG image** in `<head>`
 
-### Wiring up the enquiry form
+### Wiring up the inquiry form
 
 It validates and confirms **client-side only — it does not send**. To make it
 live, give the `<form>` an `action` and replace the block marked

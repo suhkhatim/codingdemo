@@ -359,9 +359,9 @@ sup{font-size:.6em;vertical-align:super;line-height:0}
 .inline-note{display:block;margin-top:10px;color:var(--rule-2);font-style:normal}
 
 /* =========================================================
-   06 Enquiry — a form that looks like a form, not a card
+   06 Inquiry — a form that looks like a form, not a card
    ========================================================= */
-.enquiry-form{margin-top:38px;border-top:1px solid var(--rule-2);padding-top:30px}
+.inquiry-form{margin-top:38px;border-top:1px solid var(--rule-2);padding-top:30px}
 .f{margin-bottom:24px}
 .f-pair{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
 .f label{display:block;margin-bottom:9px;color:var(--ink-2)}

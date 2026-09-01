@@ -139,11 +139,11 @@
   })();
 
   /* -------------------------------------------------------
-     Enquiry form — validates only. It does not send:
+     Inquiry form — validates only. It does not send:
      give the <form> an action and replace the block marked
      below with a real fetch().
      ------------------------------------------------------- */
-  (function enquiry() {
+  (function inquiry() {
     const form   = $('#contactForm');
     const status = $('#formStatus');
     if (!form) return;
